@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->string('pass');
+            $table->string('name',length:255);
+            $table->string('email',length:255)->unique();
+            $table->string('pass',length:255);
             $table->integer('school_id');
             $table->integer('class_id');
             $table->integer('role')->default(2);
-            $table->string('comment')->default('※みんなにコメントしよう');
+            $table->string('comment',length:255)->default('※みんなにコメントしよう');
             $table->timestamps();
         });
     }
