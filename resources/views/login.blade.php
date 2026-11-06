@@ -30,6 +30,7 @@
                     ログイン
                 </button>
             </form>
+            <a href="{{ route('top') }}">TOPへ(検証専用)</a>
             <div class="sign-up">
                 <div class="blank"></div>アカウントをお持ちでない方&emsp;<a href="{{ route('signup.create') }}">新規登録 →</a><div class="blank"></div>
             </div>
