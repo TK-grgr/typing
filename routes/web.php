@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
+use App\Http\Controllers\SignupController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,3 +14,4 @@ Route::post('/login','loginCheck')->name('login_store');
 Route::post('/logout','logout')->name('logout');
 }
 );
+Route::resource('signup',SignupController::class);

@@ -14,7 +14,7 @@ class LoginController extends Controller
     public function LoginCheck(Request $request)
     {
         //viewからemailとpasswordを受け取り
-        $credentials = $request->only('email','password');
+        $credentials = $request->only('email','pass');
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
             //ログイン後のページを入れる

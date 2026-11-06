@@ -3,6 +3,9 @@
 html{
     background-color: #ECEEF2;
 }
+select{
+    /* appearance: none; */
+}
 .wrapper{
     max-width: 1200px;
     margin: auto;
@@ -18,7 +21,7 @@ html{
 .blank{
     height: 2rem;
 }
-/* ログインフォーム */
+/* ログイン・新規登録フォーム */
 #login{
     background-color: #ECEEF2;
 }
@@ -95,4 +98,9 @@ html{
     font-size: 14px;
     border-top: solid 2px #e1e5e9;
     padding: 2px;
+}
+
+.signup-img{
+    width: 300px;
+    height: auto;
 }
