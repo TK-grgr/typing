@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Auth\Events\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,5 +27,12 @@ class LoginController extends Controller
             return back()->withErrors([
                 'email' => 'メールアドレスまたはパスワードが違います。',
             ]);
+    }
+    public function Logout()
+    {
+        return view('login');
+    }
+    public function PassChange(){
+        return view('passChange');
     }
 }

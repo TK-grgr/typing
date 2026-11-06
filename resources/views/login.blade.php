@@ -1,6 +1,6 @@
 @extends('layouts.sub-app') 
 @section('main') 
-<div id="login">
+
         {{-- ログインボタンが画面外に行ってしまい触れ　づらいのでいコメントアウト --}}
         {{-- 新規登録も画面外へ出ているので画像サイズ要変更 --}}
         {{-- <img src="{{ asset('images/情報教育委員会｜ロゴ (1).png') }}"> --}}
@@ -23,7 +23,7 @@
                     <label>パスワード</label><br>
                     <input class="form-control" type="password" name="pass"  placeholder="パスワードを入力">
                     <div class="forget-pass">
-                        <a href=""><p class="right-item">パスワードをお忘れですか?</p></a>
+                        <a href="{{ route('passChange') }}"><p class="right-item">パスワードをお忘れですか?</p></a>
                     </div>
                 </div>
                 <button type="submit" class="form-group login-btn">
@@ -35,5 +35,4 @@
             </div>
         </div>
     </div>
-</div>
 @endsection
