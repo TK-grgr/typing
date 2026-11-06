@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html id="login">
 <head>
 <meta charset="UTF-8"/>
 {{-- リセットCSS --}}
@@ -8,9 +8,6 @@
 <title>TypeUp</title>
 </head>
 <body>
-    <header>
-
-    </header>
     <nav>
 
     </nav>

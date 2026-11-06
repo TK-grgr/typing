@@ -5,7 +5,7 @@
     <div class="blank"></div>
         <div class="login-form">
             <div class="right-item">
-                <img class="signup-img" src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}">
+                <a href="{{ route('login') }}"><img class="signup-img" src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}"></a>
             </div>
             <h1 class="center-item">新規登録</h1>
             <form action="{{ route('signup.store') }}" method="POST">
