@@ -1,7 +1,7 @@
 @charset "UTF-8";
 /* 共通 */
 html{
-    
+    background-color: #ECEEF2;
 }
 .wrapper{
     max-width: 1200px;
@@ -15,12 +15,15 @@ html{
     text-align: right;
     margin: auto;
 }
+.blank{
+    height: 2rem;
+}
 /* ログインフォーム */
 #login{
     background-color: #ECEEF2;
 }
 .login-form{
-    max-width: 900px;
+    max-width: 850px;
     margin: 0 auto;
     padding: 40px;
     background-color: #fff;
@@ -70,4 +73,26 @@ html{
 .login-form .login-btn:hover{
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(81, 86, 184, 0.1);
+}
+
+.login-form .forget-pass{
+    margin-top: 1rem;
+    font-size: 14px;
+}
+.login-form .forget-pass a,
+.sign-up a{
+    text-decoration: none;
+}
+
+.login-form .forget-pass a:hover,
+.sign-up a:hover{
+    text-decoration: underline;
+}
+
+.sign-up{
+    text-align: center;
+    color: #555;
+    font-size: 14px;
+    border-top: solid 2px #e1e5e9;
+    padding: 2px;
 }
