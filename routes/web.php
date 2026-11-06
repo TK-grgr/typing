@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
 use App\Http\Controllers\SignupController;
+use App\Http\Controllers\TopController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +15,6 @@ Route::get('/login','login')->name('login');
 Route::post('/login','loginCheck')->name('login_store');
 Route::post('/logout','logout')->name('logout');
 Route::get('/passChange','passChange')->name('passChange');
-}
-);
+});
+Route::get('/top',[TopController::class,'index'])->name('top');
 Route::resource('signup',SignupController::class);
