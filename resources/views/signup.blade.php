@@ -48,8 +48,8 @@
                 </div>
                 <div class="form-group">
                     <label>パスワード</label><br>
-                    <input class="form-control" type="password" name="pass"  placeholder="パスワードを入力">
-                    @error('pass')
+                    <input class="form-control" type="password" name="password"  placeholder="パスワードを入力">
+                    @error('password')
                     <div style="color:red">{{ $message }}</div>
                     @enderror
                 </div>

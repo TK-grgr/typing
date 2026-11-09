@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name',length:255);
             $table->string('email',length:255)->unique();
-            $table->string('pass',length:255);
+            $table->string('password',length:255);
             $table->integer('school_id');
             $table->integer('class_id');
             $table->integer('role')->default(2);

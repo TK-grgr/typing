@@ -6,6 +6,17 @@ html{
 select{
     /* appearance: none; */
 }
+
+th,td {
+    border: solid 2px;
+    padding: 1rem 2rem;
+}
+
+table {
+    border-collapse:collapse;
+    width: 100%;
+}
+
 .wrapper{
     max-width: 1200px;
     margin: auto;

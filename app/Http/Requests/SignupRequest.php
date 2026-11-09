@@ -26,9 +26,11 @@ class SignupRequest extends FormRequest
         return [
             'name'      => ['required','max:255'],
             'email'     => ['required','email','unique:users,email'],
-            'pass'      => ['required'],
-            'school_id' => ['required','exists:schools,id'],
-            'class_id'  => ['required','exists:classes,id'],
+            'password'      => ['required'],
+            'school_id' => ['required'],
+            // ,'exists:schools,id'
+            'class_id'  => ['required'],
+            // ,'exists:classes,id'
         ];
     }
 
@@ -52,6 +54,6 @@ class SignupRequest extends FormRequest
     #[Override]
     public function attributes():array
     {
-        return ['name' => '名前','email'=>'メールアドレス','pass'=>'パスワード','school_id'=>'所属校','classes'=>'クラス' ];
+        return ['name' => '名前','email'=>'メールアドレス','password'=>'パスワード','school_id'=>'所属校','classes'=>'クラス' ];
     }
 }
