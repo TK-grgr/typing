@@ -36,7 +36,7 @@
         </tr>
         @foreach ($results as $result)
         <tr class="center-item">
-            <td>{{ $result->question_id }}</td>
+            <td>{{ $result->question->title }}</td>
             <td>{{ $result->score }}</td>
             <td>{{ $result->correct }}</td>
             <td>{{ $result->miss }}</td>

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
+use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
@@ -21,3 +22,4 @@ Route::get('/passChange','passChange')->name('passChange');
 Route::get('/top',[TopController::class,'index'])->name('top');
 Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
+Route::resource('Rank',RankController::class);

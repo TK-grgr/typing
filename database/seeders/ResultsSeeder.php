@@ -12,13 +12,17 @@ class ResultsSeeder extends Seeder
      */
     public function run(): void
     {
-        Result::create([
-            'user_id'      => 1,
-            'question_id'  => 1,
-            'score'        => 350,
-            'correct'      => 45,
-            'miss'         => 3,
-            'input_time'   => 60,
-        ]);
+        for ($i = 1; $i <= 20; $i++) {
+
+            Result::create([
+                'user_id'      => 1,
+                'question_id'  => 1,
+                'score'        => rand(100, 1000),
+                'correct'      => rand(20, 100),
+                'miss'         => rand(0, 20),
+                'input_time'   => rand(30, 180),
+            ]);
+
+        }
     }
 }
