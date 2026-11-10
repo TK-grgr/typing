@@ -34,6 +34,17 @@ table {
     height: 2rem;
 }
 
+a.black-text,
+a.black-text:visited{
+    color: black;
+    text-decoration: none;
+}
+
+.sort-icon{
+    display: inline-block;
+    text-align: center;
+}
+
 .nav{
     background-color: #D9D9D9;
 

@@ -11,10 +11,32 @@ class ResultController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $sort = $request->get('sort', 'created_at');
+        $direction = $request->get('direction', 'desc');
+
+        $allowedColumns = [
+            'score',
+            'correct',
+            'miss',
+            'input_time',
+            'created_at',
+        ];
+
+        $sortableColumns = [
+            'score' => 'スコア',
+            'correct' => '入力数',
+            'miss' => 'ミス数',
+            'input_time' => '入力時間',
+            'created_at' => '入力日',
+        ];
+        if(!in_array($sort, $allowedColumns)){
+            $sort = 'created_at';
+        }
+
         $results = Result::with('user')->where('user_id', Auth::id())->get();
-        return view('resultList',compact('results'));
+        return view('resultList',compact('results','sort','direction','sortableColumns'));
         
     }
 
