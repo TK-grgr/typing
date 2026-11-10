@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group">
                     <label>パスワード</label><br>
-                    <input class="form-control" type="password" name="pass"  placeholder="パスワードを入力">
+                    <input class="form-control" type="password" name="password"  placeholder="パスワードを入力">
                     <div class="forget-pass">
                         <a href="{{ route('passChange') }}"><p class="right-item">パスワードをお忘れですか?</p></a>
                     </div>
