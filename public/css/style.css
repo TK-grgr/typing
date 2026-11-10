@@ -40,13 +40,8 @@ a.black-text:visited{
     text-decoration: none;
 }
 
-a.black-text:hover{
-    text-decoration: underline;
-}
-
 .sort-icon{
     display: inline-block;
-    width: 2em;
     text-align: center;
 }
 
