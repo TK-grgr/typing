@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
@@ -23,3 +24,4 @@ Route::get('/top',[TopController::class,'index'])->name('top');
 Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
+Route::resource('/Profile',ProfileController::class);

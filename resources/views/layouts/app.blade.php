@@ -16,10 +16,11 @@
         </div>
                 <ul class="nav-menu">
                         {{-- <li class="left-nav-text"><a href="">プロフィール</a></li> --}}
+                        <li><a href="{{ route('top') }}">ホーム</a></li>
                         <li><a href="">タイピング</a></li>
                         <li><a href="{{ route('Rank.index') }}">ランキング</a></li>
                         <li><a href="">メニュー作成</a></li>
-                        <li><a href="" class="nav-menu-end">プロフィール</a></li>
+                        <li><a href="{{ route('Profile.index') }}" class="nav-menu-end">プロフィール</a></li>
                     </div>
                 </ul>
             </nav>

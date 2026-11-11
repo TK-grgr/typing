@@ -231,3 +231,28 @@ table {
     font-weight: bold;
     top: 2px;
 }
+
+/* ﾌﾟﾛﾌｨｰﾙ用 */
+.profile{
+    border:solid 1px #333;
+    padding: 12px;
+    border-radius: 8px;
+}
+.profile h2{
+    width: fit-content;
+    padding-bottom: 6px;
+    border-bottom: solid 2px #333;
+}
+.profile-top{
+    display: flex;
+    justify-content: space-between;
+}
+.profile-btn{
+    font-size: 24px;
+    color: #000;
+    text-decoration: none;
+    background-color: #BBB;
+    border-radius: 8px;
+    padding: 0.5rem;
+    padding-top: 1.2rem;
+}
