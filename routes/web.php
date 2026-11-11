@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
 use App\Http\Controllers\ProfileController;
@@ -25,3 +26,8 @@ Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
+Route::get(
+    '/admin/menu',
+    [AdminController::class, 'menu']
+)->name('admin.menu');
+Route::resource('admin',AdminController::class);

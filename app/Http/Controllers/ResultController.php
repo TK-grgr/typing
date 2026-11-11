@@ -35,7 +35,8 @@ class ResultController extends Controller
             $sort = 'created_at';
         }
 
-        $results = Result::with(['user','question'])->where('user_id', Auth::id())->orderBy($sort,$direction)->get();
+        $results = Result::with(['user','question'])->where('user_id', Auth::id())->orderBy(
+        $sort,$direction)->get();
         return view('resultList',compact('results','sort','direction','sortableColumns'));
         
     }

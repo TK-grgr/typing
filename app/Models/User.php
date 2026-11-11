@@ -24,6 +24,7 @@ class User extends Authenticatable
         'password',
         'school_id',
         'class_id',
+        'role',
     ];
 
     /**
@@ -50,6 +51,22 @@ class User extends Authenticatable
     }
     public function result()
     {
-        return $this->belongsTo(Result::class);
+        return $this->hasMany(Result::class);
     }
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+public function classroom()
+{
+    return $this->belongsTo(
+        SchoolClass::class,
+        'class_id'
+    );
+    
+}
+public function question()
+{
+    return $this->hasmany(Question::class);
+}
 }
