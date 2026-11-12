@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
 use App\Http\Controllers\ProfileController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
+use App\Http\Controllers\QuestionController;
 
 
 Route::get('/', function () {
@@ -25,3 +27,5 @@ Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
+Route::resource('admin',AdminController::class);
+Route::resource('questions',QuestionController::class);
