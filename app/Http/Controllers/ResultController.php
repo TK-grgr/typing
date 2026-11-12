@@ -37,7 +37,7 @@ class ResultController extends Controller
 
         $results = Result::with(['user','question'])->where('user_id', Auth::id())->orderBy(
         $sort,$direction)->get();
-        return view('resultList',compact('results','sort','direction','sortableColumns'));
+        return view('result.index',compact('results','sort','direction','sortableColumns'));
         
     }
 
