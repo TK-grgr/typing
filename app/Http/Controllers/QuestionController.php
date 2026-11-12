@@ -21,7 +21,7 @@ class QuestionController extends Controller
     $questions = Question::all();
 
     return view(
-        'question.index',
+        'questions.index',
         compact('questions')
     );
     }
