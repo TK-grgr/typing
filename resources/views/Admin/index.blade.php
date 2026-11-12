@@ -9,7 +9,7 @@
             ユーザー管理
         </a>
 
-        <a class="admin-tab" href="{{ route('admin.menu') }}">
+        <a class="admin-tab" href="{{ route('questions.index') }}">
             タイピングメニュー管理
         </a>
 

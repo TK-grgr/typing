@@ -30,8 +30,8 @@
         @foreach ($results as $index => $result)
         <tr class="center-item">
             <td>{{ $index+  1 }}位</td>
-            <td>{{ $result->question->title }}</td>
-            <td>{{ $result->user->name }}</td>
+            <td>{{ $result->question?->title ?? '削除済み問題' }}</td>
+            <td>{{ $result->user?->name ?? '削除済みユーザー' }}</td>
             <td>{{ $result->score }}</td>
             <td>{{ $result->created_at->format('Y/m/d') }}</td>
         </tr>
@@ -40,7 +40,7 @@
 
 @if($myResult)
     <td>{{ $myRank }}位</td>
-    <td>{{ $myResult->question->title }}</td>
+    <td>{{ $myResult->question?->title ?? '削除済み問題' }}</td>
     <td>{{ $myResult->user->name }}</td>
     <td>{{ $myResult->score }}</td>
     <td>{{ $myResult->created_at->format('Y/m/d') }}</td>

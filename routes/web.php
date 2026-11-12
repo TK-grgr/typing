@@ -8,6 +8,7 @@ use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
+use App\Http\Controllers\QuestionController;
 
 
 Route::get('/', function () {
@@ -26,8 +27,5 @@ Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
-Route::get(
-    '/admin/menu',
-    [AdminController::class, 'menu']
-)->name('admin.menu');
 Route::resource('admin',AdminController::class);
+Route::resource('questions',QuestionController::class);

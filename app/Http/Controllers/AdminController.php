@@ -124,17 +124,4 @@ class AdminController extends Controller
             '削除しました'
         );
 }
-
-    public function menu()
-{
-    if(Auth::user()->role != 1){
-        abort(403);
-        }
-    $questions = Question::all();
-
-    return view(
-        'admin.menu',
-        compact('questions')
-    );
-}
 }

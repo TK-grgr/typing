@@ -13,8 +13,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        $profiles = User::with('results')->where('id',Auth::id())->first();
-        return view('profile',compact('profiles'));
+        $profiles = User::with('result')->where('id',Auth::id())->first();
+        return view('profile.index',compact('profiles'));
     }
 
     /**
