@@ -53,7 +53,7 @@ class RankController extends Controller
         $myRank = $results->search(
             fn($result) => $result->id === $myResult->id) + 1;
     }
-        return view('rankList',compact('results','type','level','tabs','myResult','myRank'));
+        return view('rank.index',compact('results','type','level','tabs','myResult','myRank'));
     }
 
     /**
