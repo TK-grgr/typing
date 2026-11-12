@@ -12,7 +12,7 @@
         && $level == $tab['level'])
         ? 'active'
         : '' }}"
-        href="{{ route('rank.index',[
+        href="{{ route('Rank.index',[
             'type' => $tab['type'],
             'level' => $tab['level']
         ]) }}">
