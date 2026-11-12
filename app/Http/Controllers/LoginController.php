@@ -15,11 +15,11 @@ class LoginController extends Controller
     public function LoginCheck(Request $request)
     {
         //viewからemailとpasswordを受け取り
-        $credentials = $request->only('email','pass');
+        $credentials = $request->only('email','password');
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
             //ログイン後のページを入れる
-            return redirect('');
+            return redirect('/top');
             //ログイン後ページの認証機能は未設定
             
         }

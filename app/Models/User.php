@@ -21,9 +21,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'pass',
+        'password',
         'school_id',
         'class_id',
+        'role',
     ];
 
     /**
@@ -48,4 +49,24 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function result()
+    {
+        return $this->hasMany(Result::class);
+    }
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+public function classroom()
+{
+    return $this->belongsTo(
+        SchoolClass::class,
+        'class_id'
+    );
+    
+}
+public function question()
+{
+    return $this->hasmany(Question::class);
+}
 }

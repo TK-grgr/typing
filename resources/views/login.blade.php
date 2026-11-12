@@ -21,7 +21,7 @@
                 </div>
                 <div class="form-group">
                     <label>パスワード</label><br>
-                    <input class="form-control" type="password" name="pass"  placeholder="パスワードを入力">
+                    <input class="form-control" type="password" name="password"  placeholder="パスワードを入力">
                     <div class="forget-pass">
                         <a href="{{ route('passChange') }}"><p class="right-item">パスワードをお忘れですか?</p></a>
                     </div>
@@ -30,6 +30,7 @@
                     ログイン
                 </button>
             </form>
+            <a href="{{ route('top') }}">TOPへ(検証専用)</a>
             <div class="sign-up">
                 <div class="blank"></div>アカウントをお持ちでない方&emsp;<a href="{{ route('signup.create') }}">新規登録 →</a><div class="blank"></div>
             </div>
