@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
@@ -21,14 +22,17 @@ Route::get('/login','login')->name('login');
 Route::post('/login','loginCheck')->name('login_store');
 Route::get('/passChange','passChange')->name('passChange');
 });
-
+Route::resource('signup',SignupController::class);
+Route::post('/forgot-password',[PasswordResetController::class,'sendResetLinkEmail'])->name('password.email');
+Route::get('/reset-password/{token}', function ($token) {
+        return view('auth.reset-password', ['token' => $token]);
+    })->name('password.reset');
 });
 
 Route::middleware('auth')->group(function(){
 
 Route::post('/logout', [LogInController::class, 'logout'])->name('logout');
 Route::get('/top',[TopController::class,'index'])->name('top');
-Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
