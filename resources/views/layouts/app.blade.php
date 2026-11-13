@@ -20,8 +20,18 @@
                         <li><a href="">タイピング</a></li>
                         <li><a href="{{ route('Rank.index') }}">ランキング</a></li>
                         <li><a href="">メニュー作成</a></li>
-                        <li><a href="{{ route('Profile.index') }}" class="nav-menu-end">プロフィール</a></li>
-                    </div>
+                        <li><a href="{{ route('Profile.index') }}" >プロフィール</a></li>
+                        <li><a href="{{ route('logout') }}" 
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 
+                                class="nav-menu-end">
+                                    <span class="red-text">ログアウト</span>
+                                </a>
+                                
+                                <!-- ログアウト用の隠しフォーム -->
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </li>
                 </ul>
             </nav>
     @yield('main')
