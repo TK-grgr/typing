@@ -14,14 +14,19 @@ use App\Http\Controllers\QuestionController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware('guest')->group(function(){
 
 Route::controller(LoginController::class)->group(function(){
 Route::get('/login','login')->name('login');
 Route::post('/login','loginCheck')->name('login_store');
-Route::post('/logout','logout')->name('logout');
 Route::get('/passChange','passChange')->name('passChange');
 });
 
+});
+
+Route::middleware('auth')->group(function(){
+
+Route::post('/logout', [LogInController::class, 'logout'])->name('logout');
 Route::get('/top',[TopController::class,'index'])->name('top');
 Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
@@ -29,3 +34,6 @@ Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
+
+});
+

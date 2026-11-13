@@ -28,9 +28,12 @@ class LoginController extends Controller
                 'email' => 'メールアドレスまたはパスワードが違います。',
             ]);
     }
-    public function Logout()
+    public function Logout(Request $request)
     {
-        return view('login');
+        Auth::logout(); // 認証状態を解除
+        $request->session()->invalidate(); // セッションを無効化
+        $request->session()->regenerateToken(); // 新しいCSRFトークン生成
+        return redirect('login')->with('message', 'ログアウトしました');
     }
     public function PassChange(){
         return view('passChange');
