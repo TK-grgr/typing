@@ -12,70 +12,12 @@ class QuestionsSeeder extends Seeder
      */
     public function run(): void
     {
-       Question::truncate();
-
         Question::create([
-            'title' => '実践長文①',
-            'no' => 1,
+            'title' => 'テスト用',
+            'no'      => 1,
             'type' => 1,
             'level' => 1,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => '実践長文②',
-            'no' => 2,
-            'type' => 1,
-            'level' => 1,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => '実践短文①',
-            'no' => 3,
-            'type' => 2,
-            'level' => 1,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => '実践短文②',
-            'no' => 4,
-            'type' => 2,
-            'level' => 1,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => 'ゲーム長文①',
-            'no' => 5,
-            'type' => 1,
-            'level' => 2,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => 'ゲーム長文②',
-            'no' => 6,
-            'type' => 1,
-            'level' => 2,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => 'ゲーム短文①',
-            'no' => 7,
-            'type' => 2,
-            'level' => 2,
-            'release' => 1,
-        ]);
-
-        Question::create([
-            'title' => 'ゲーム短文②',
-            'no' => 8,
-            'type' => 2,
-            'level' => 2,
-            'release' => 1,
+            'release'=>1,
         ]);
     }
 }
