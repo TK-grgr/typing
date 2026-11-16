@@ -9,7 +9,7 @@
             </div>
             <h1 class="center-item">パスワード再設定</h1>
             {{-- パスワードリセットは未実装 --}}
-            <form action="" method="POST">
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label>メールアドレス</label><br>
