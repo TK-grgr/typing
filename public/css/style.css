@@ -579,3 +579,39 @@ display: grid;
 .typing-tab.active:hover{
     background-color: #efefef;
 }
+
+.typing-area{
+
+    text-align: center;
+
+    margin-top: 50px;
+}
+
+#questionCount{
+
+    font-size: 1.2rem;
+
+    margin-bottom: 30px;
+}
+
+#targetText{
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 40px;
+    min-height: 100px;
+}
+
+#typingInput{
+
+    width: 700px;
+
+    max-width: 100%;
+
+    padding: 15px;
+
+    font-size: 1.4rem;
+
+    border: 2px solid #ccc;
+
+    border-radius: 10px;
+}

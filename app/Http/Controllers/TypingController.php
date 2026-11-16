@@ -44,7 +44,8 @@ class TypingController extends Controller
      */
     public function show(string $id)
     {
-        return view('typing.index');
+            $question = Question::with('details')->findOrFail($id);
+        return view('typing.show',compact('question'));
     }
 
     /**
