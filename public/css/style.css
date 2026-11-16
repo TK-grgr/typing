@@ -190,6 +190,7 @@ table {
     margin-bottom:0;
     position: relative;
     top: -2px;
+    
 }
 
 .rank-tab{
@@ -453,13 +454,21 @@ table {
 }
 
 .back-btn{
+
     display: inline-block;
+
     padding: 10px 20px;
+
     border: 1px solid #ccc;
+
     border-radius: 5px;
+
     background-color: #f5f5f5;
+
     color: #333;
+
     text-decoration: none;
+
     transition: 0.2s;
 }
 
@@ -470,112 +479,40 @@ table {
 }
 
 .enabled{
+
     padding: 4px 10px;
+
     border-radius: 20px;
+
     background: #d8ecff;
+
     color: #2c7be5;
+
     font-size: 12px;
 }
 
 .disabled{
+
     padding: 4px 10px;
+
     border-radius: 20px;
+
     background: #eeeeee;
+
     color: #666;
+
     font-size: 12px;
 }
 
 .form-group textarea{
+
     width: 100%;
+
     min-height: 200px;
+
     padding: 10px;
+
     box-sizing: border-box;
+
     resize: vertical;
-}
-
-/* タイピング画面 */
-.question-card{
-    display: block;
-    text-decoration: none;
-    color: black;
-    padding: 20px;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    background-color: white;
-    transition: 0.2s;
-    width: 200px;
-}
-
-.question-card:hover{
-    border-color: #5156B8;
-    box-shadow:
-        0 5px 15px
-        rgba(0,0,0,0.1);
-}
-
-.question-title{
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-.question-info{
-    display: flex;
-    gap: 10px;
-}
-
-.rule-badge{
-    background-color: #EEF0FF;
-    color: #5156B8;
-    padding: 5px 10px;
-    border-radius: 20px;
-    font-size: 0.9rem;
-}
-.question-flex{
-    display: flex;
-    width:100%;
-    justify-content: space-between;
-    gap: 80px;
-}
-
-.question-grid{
-display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
-    width: 100%;
-}
-
-.typing-tabs{
-    display: flex;
-    margin-bottom:0;
-    position: relative;
-    gap: 4px;
-}
-
-.typing-tab{
-    display: inline-block;
-    padding: 12px 24px;
-    color: black;
-    text-decoration: none;
-    background-color: #e5e5e5;
-    border: 2px solid #888;
-    border-radius: 10px;
-    transition: 0.2s;
-    z-index: 1;
-    position: relative;
-}
-
-.typing-tab:hover{
-    background-color: #d0d0d0;
-}
-
-.typing-tab.active{
-    background-color: white;
-    font-weight: bold;
-    position: relative;
-    z-index: 10;
-    border: 2px solid #5156B8;
-}
-.typing-tab.active:hover{
-    background-color: #efefef;
 }
