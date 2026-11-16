@@ -9,6 +9,7 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\TypingController;
 
 
 Route::get('/', function () {
@@ -29,3 +30,5 @@ Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
+
+Route::get('/typing', [TypingController::class, 'select'])->name('typing.select');
