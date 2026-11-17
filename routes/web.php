@@ -38,6 +38,7 @@ Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
+Route::post('/typing/save-result',[TypingController::class,'saveResult'])->name('typing.saveResult');
 Route::resource('typing',TypingController::class);
 
 });

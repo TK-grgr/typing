@@ -18,13 +18,27 @@
             1 / 10
         </div>
 
-        <div id="targetText">ここに問題文が出力されます。</div>
+        <div id="targetText">Spaceキーで開始。</div>
 
         <input type="text" id="typingInput" autocomplete="off" placeholder="ここに入力してください">
     </div>
 </div>
+<meta
+    name="csrf-token"
+    content="{{ csrf_token() }}">
+
 <script>
-window.typingData = @json($question->details->pluck('text'));
+window.typingData = {
+    questionId: {{ $question->id }},
+    title: @json($question->title),
+    details: @json(
+        $question->details
+            ->pluck('text')
+            ->toArray()
+    ),
+    saveUrl:"{{ route('typing.saveResult') }}"
+};
+
 </script>
 <script src="{{ asset('js/typing.js') }}"></script>
 @endsection

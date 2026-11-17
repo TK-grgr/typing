@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('main')
-
 <div class="wrapper">
 
     <div class="blank"></div>

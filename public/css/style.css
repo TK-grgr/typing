@@ -615,3 +615,54 @@ display: grid;
 
     border-radius: 10px;
 }
+/* タイピング結果画面 */
+.result-card{
+
+    max-width: 700px;
+
+    margin: 30px auto;
+
+    padding: 30px;
+
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 10px
+        rgba(0,0,0,0.08);
+}
+
+.result-row{
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 15px 0;
+
+    border-bottom: 1px solid #eee;
+}
+
+.result-label{
+
+    font-weight: bold;
+}
+
+.result-value{
+
+    color: #5156B8;
+
+    font-size: 1.25rem;
+
+    font-weight: bold;
+}
+
+.result-card h2{
+
+    margin-bottom: 30px;
+
+    text-align: center;
+}

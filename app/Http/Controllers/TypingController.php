@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Question;
+use App\Models\Result;
+use Illuminate\Support\Facades\Auth;
 
 class TypingController extends Controller
 {
@@ -71,4 +73,19 @@ class TypingController extends Controller
     {
         //
     }
+    public function saveResult(Request $request)
+{
+    $result = Result::create([
+        'user_id' => Auth::id(),
+        'question_id' => $request->question_id,
+        'score' => $request->score,
+        'correct' => $request->correct,
+        'miss' => 0,
+        'input_time' => $request->input_time,
+    ]);
+
+    return response()->json([
+        'result_id' => $result->id
+    ]);
+}
 }
