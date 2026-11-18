@@ -615,6 +615,14 @@ display: grid;
 
     border-radius: 10px;
 }
+
+.done{
+    color:#5156B8 ; 
+    font-weight:bold;
+}
+#romanText{
+    font-size: 2rem;
+}
 /* タイピング結果画面 */
 .result-card{
 
@@ -666,3 +674,4 @@ display: grid;
 
     text-align: center;
 }
+

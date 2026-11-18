@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Question;
 use App\Models\Result;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TypingController extends Controller
 {
@@ -88,13 +89,18 @@ class TypingController extends Controller
     }
     public function saveResult(Request $request)
 {
+
+Log::info([
+'miss' => $request->miss,
+]);
     $result = Result::create([
         'user_id' => Auth::id(),
         'question_id' => $request->question_id,
         'score' => $request->score,
         'correct' => $request->correct,
-        'miss' => 0,
+        'miss' => $request->miss ?? 0,
         'input_time' => $request->input_time,
+        
     ]);
 
     return response()->json([

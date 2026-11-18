@@ -15,6 +15,12 @@
             <span class="result-label">正解文字数</span>
             <span class="result-value">{{ $result->correct }}</span>
         </div>
+        @if($result->question->level == 2)
+        <div class="result-row">
+            <span class="result-label">ミス数</span>
+            <span class="result-value">{{ $result->miss }}</span>
+        </div>
+        @endif
         <div class="result-row">
             <span class="result-label">入力時間</span>
             <span class="result-value">{{ $result->input_time }} 秒</span>

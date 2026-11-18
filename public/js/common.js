@@ -14,7 +14,9 @@ async function saveResult(
     score,
     correct,
     inputTime,
-    saveUrl
+    saveUrl,
+    miss = 0,
+    
 ) {
     const response =
         await fetch(
@@ -29,6 +31,7 @@ async function saveResult(
                     question_id:questionId,
                     score:score,
                     correct:correct,
+                    miss:miss,
                     input_time:inputTime,
                 })
             }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('question_id');
             $table->string('text',length:255);
+            $table->string('roman',length:255)->nullable();
             $table->timestamps();
         });
     }

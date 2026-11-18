@@ -3,19 +3,19 @@ const targetText =document.getElementById('targetText');
 const typingInput =document.getElementById('typingInput');
 const questionCount =document.getElementById('questionCount');
 const wordsLength = words.length;
-let score = 0;
-let time = 0;
-let startTime;
-let count = 0;
-let correct = 0;
-let inWord = "";
-let CDtime = 3;
-let started = false;
+let score = 0;//スコア
+let time = 0;//経過時間
+let startTime;//開始時刻の取得
+let count = 0;//クリア済み問題のカウント
+let correct = 0;//入力文字数
+let inWord = "";//入力文字の初期化
+let CDtime = 3;//スタート後カウント時間
+let started = false;//開始フラグ
 
 async function endGame()
 {
     time =timerStop(startTime);
-    score =calculateScore(correct,time);
+    score =calculateScore();
     try{
         const result =
             await saveResult(
@@ -90,3 +90,12 @@ window.addEventListener('keydown', (e) => {
     countDown();
   }
 });
+//スコア計算
+function calculateScore(){
+
+    return Math.round(
+        (correct / Math.max(time,1))
+        * 60
+    );
+
+}

@@ -16,7 +16,7 @@ class DetailsSeeder extends Seeder
 
         $details = [
 
-            // question_id = 1 実践長文①
+            // 実践長文①
             1 => [
                 '今日はとても良い天気です。',
                 '学校へ向かう途中で桜を見ました。',
@@ -30,7 +30,7 @@ class DetailsSeeder extends Seeder
                 '練習を続けて上達を目指しましょう。',
             ],
 
-            // question_id = 2 実践長文②
+            // 実践長文②
             2 => [
                 'プログラミングは問題解決の手段です。',
                 '設計を丁寧に行うことで品質が向上します。',
@@ -44,7 +44,7 @@ class DetailsSeeder extends Seeder
                 'チーム開発ではGitが活躍します。',
             ],
 
-            // question_id = 3 実践短文①
+            // 実践短文①
             3 => [
                 'おはようございます。',
                 'こんにちは。',
@@ -58,7 +58,7 @@ class DetailsSeeder extends Seeder
                 'よろしくお願いいたします。',
             ],
 
-            // question_id = 4 実践短文②
+            // 実践短文②
             4 => [
                 '本日も頑張りましょう。',
                 '資料を送付します。',
@@ -72,71 +72,249 @@ class DetailsSeeder extends Seeder
                 '引き続きよろしくお願いします。',
             ],
 
-            // question_id = 5 ゲーム長文①
+            // ゲーム長文①
             5 => [
-                '勇者は仲間と共に魔王城へ向かった。',
-                '森の奥には巨大なドラゴンが眠っていた。',
-                '伝説の剣は神殿の奥深くに存在した。',
-                '冒険者たちは新たな依頼を受けた。',
-                '魔法使いは強力な呪文を唱えた。',
-                '戦士は盾を構えて攻撃を防いだ。',
-                '王国は平和を取り戻した。',
-                '宝箱の中には貴重なアイテムがあった。',
-                '敵の大軍が城へ迫っていた。',
-                '最後の決戦が始まろうとしていた。',
+
+                [
+                    'text' => '勇者は仲間と共に魔王城へ向かった。',
+                    'roman' => 'yuushahanakamatotomonimaoujouemukatta'
+                ],
+
+                [
+                    'text' => '森の奥には巨大なドラゴンが眠っていた。',
+                    'roman' => 'morinookunihakyodainadoragonganemutteita'
+                ],
+
+                [
+                    'text' => '伝説の剣は神殿の奥深くに存在した。',
+                    'roman' => 'densetsunokenhashindennookufukakunisonzaishita'
+                ],
+
+                [
+                    'text' => '冒険者たちは新たな依頼を受けた。',
+                    'roman' => 'boukensyatachihaaratanairaiwouketa'
+                ],
+
+                [
+                    'text' => '魔法使いは強力な呪文を唱えた。',
+                    'roman' => 'mahoutsukaihakyouryokunajumonwotonaeta'
+                ],
+
+                [
+                    'text' => '戦士は盾を構えて攻撃を防いだ。',
+                    'roman' => 'senshihatatewokamaetekougekiwofuseida'
+                ],
+
+                [
+                    'text' => '王国は平和を取り戻した。',
+                    'roman' => 'oukokuhaheiwawotorimodoshita'
+                ],
+
+                [
+                    'text' => '宝箱の中には貴重なアイテムがあった。',
+                    'roman' => 'takarabakononakanihakichounaitemugaatta'
+                ],
+
+                [
+                    'text' => '敵の大軍が城へ迫っていた。',
+                    'roman' => 'tekinotaigungashirohesematteita'
+                ],
+
+                [
+                    'text' => '最後の決戦が始まろうとしていた。',
+                    'roman' => 'saigonokessenhahajimaroutoshiteita'
+                ],
+
             ],
 
-            // question_id = 6 ゲーム長文②
+            // ゲーム長文②
             6 => [
-                '宇宙船は未知の惑星へ到着した。',
-                '探索隊は周囲の調査を始めた。',
-                '巨大な生物の足跡が発見された。',
-                '基地との通信は良好だった。',
-                'エネルギー残量は十分にあった。',
-                '隊員たちは慎重に行動した。',
-                '古代文明の遺跡を発見した。',
-                '不思議な装置が作動した。',
-                '危険区域への侵入は禁止されていた。',
-                'ミッションは順調に進行した。',
+
+                [
+                    'text' => '宇宙船は未知の惑星へ到着した。',
+                    'roman' => 'uchuusenhamichinowakuseietouchakushita'
+                ],
+
+                [
+                    'text' => '探索隊は周囲の調査を始めた。',
+                    'roman' => 'tansakutaihashuinochousawohajimeta'
+                ],
+
+                [
+                    'text' => '巨大な生物の足跡が発見された。',
+                    'roman' => 'kyodainaseibutsunoashiatogahakkensareta'
+                ],
+
+                [
+                    'text' => '基地との通信は良好だった。',
+                    'roman' => 'kichitonotsuushinharyoukoudatta'
+                ],
+
+                [
+                    'text' => 'エネルギー残量は十分にあった。',
+                    'roman' => 'enerugiizanryouhajuubunniatta'
+                ],
+
+                [
+                    'text' => '隊員たちは慎重に行動した。',
+                    'roman' => 'taiintachihashinchounikoudoushita'
+                ],
+
+                [
+                    'text' => '古代文明の遺跡を発見した。',
+                    'roman' => 'kodaibunmeinosekiwihakkenshita'
+                ],
+
+                [
+                    'text' => '不思議な装置が作動した。',
+                    'roman' => 'fushiginasouchigasadoushita'
+                ],
+
+                [
+                    'text' => '危険区域への侵入は禁止されていた。',
+                    'roman' => 'kikenkuikihenoshinnyuukinshisareteita'
+                ],
+
+                [
+                    'text' => 'ミッションは順調に進行した。',
+                    'roman' => 'misshonhajunchounishinkoushita'
+                ],
+
             ],
 
-            // question_id = 7 ゲーム短文①
+            // ゲーム短文①
             7 => [
-                'スライムを倒した。',
-                'レベルアップした。',
-                '宝箱を発見した。',
-                '経験値を獲得した。',
-                '新しい武器を入手した。',
-                'クエストを達成した。',
-                '仲間が増えた。',
-                'ボスを撃破した。',
-                '回復薬を使用した。',
-                'セーブしました。',
+
+                [
+                    'text' => 'スライムを倒した。',
+                    'roman' => 'suraimuwotaoshita'
+                ],
+
+                [
+                    'text' => 'レベルアップした。',
+                    'roman' => 'reberuappushita'
+                ],
+
+                [
+                    'text' => '宝箱を発見した。',
+                    'roman' => 'takarabakowohakkenshita'
+                ],
+
+                [
+                    'text' => '経験値を獲得した。',
+                    'roman' => 'keikenchiwokakutokushita'
+                ],
+
+                [
+                    'text' => '新しい武器を入手した。',
+                    'roman' => 'atarashiibukiwonyuushushita'
+                ],
+
+                [
+                    'text' => 'クエストを達成した。',
+                    'roman' => 'kuesutowotasseishita'
+                ],
+
+                [
+                    'text' => '仲間が増えた。',
+                    'roman' => 'nakamagafueta'
+                ],
+
+                [
+                    'text' => 'ボスを撃破した。',
+                    'roman' => 'bosuogekihashita'
+                ],
+
+                [
+                    'text' => '回復薬を使用した。',
+                    'roman' => 'kaifukuyakuoshiyoushita'
+                ],
+
+                [
+                    'text' => 'セーブしました。',
+                    'roman' => 'seebushimashita'
+                ],
+
             ],
 
-            // question_id = 8 ゲーム短文②
+            // ゲーム短文②
             8 => [
-                '敵を発見した。',
-                '攻撃を回避した。',
-                '必殺技を発動した。',
-                '防御に成功した。',
-                'スコアを獲得した。',
-                'コンボが繋がった。',
-                'ゴールに到着した。',
-                'チェックポイントを通過した。',
-                'ランキングに登録した。',
-                'ゲームクリア。',
+
+                [
+                    'text' => '敵を発見した。',
+                    'roman' => 'tekiwohakkenshita'
+                ],
+
+                // [
+                //     'text' => '攻撃を回避した。',
+                //     'roman' => 'kougekiwokaihishita'
+                // ],
+
+                // [
+                //     'text' => '必殺技を発動した。',
+                //     'roman' => 'hissatsuwazawohatsudoushita'
+                // ],
+
+                // [
+                //     'text' => '防御に成功した。',
+                //     'roman' => 'bougyoniseikoushita'
+                // ],
+
+                // [
+                //     'text' => 'スコアを獲得した。',
+                //     'roman' => 'sukoawokakutokushita'
+                // ],
+
+                // [
+                //     'text' => 'コンボが繋がった。',
+                //     'roman' => 'konbogatsunagatta'
+                // ],
+
+                // [
+                //     'text' => 'ゴールに到着した。',
+                //     'roman' => 'goorunitouchakushita'
+                // ],
+
+                // [
+                //     'text' => 'チェックポイントを通過した。',
+                //     'roman' => 'chekkupointowotsuukashita'
+                // ],
+
+                // [
+                //     'text' => 'ランキングに登録した。',
+                //     'roman' => 'rankingunitouroku shita'
+                // ],
+
+                // [
+                //     'text' => 'ゲームクリア。',
+                //     'roman' => 'geemukuria'
+                // ],
+
             ],
+
         ];
 
         foreach ($details as $questionId => $texts) {
 
             foreach ($texts as $text) {
 
-                Detail::create([
-                    'question_id' => $questionId,
-                    'text' => $text,
-                ]);
+                if (is_array($text)) {
+
+                    Detail::create([
+                        'question_id' => $questionId,
+                        'text' => $text['text'],
+                        'roman' => $text['roman'],
+                    ]);
+
+                } else {
+
+                    Detail::create([
+                        'question_id' => $questionId,
+                        'text' => $text,
+                        'roman' => null,
+                    ]);
+
+                }
 
             }
 
