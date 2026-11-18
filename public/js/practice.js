@@ -12,31 +12,31 @@ let inWord = "";
 let CDtime = 3;
 let started = false;
 
-
-function newWord(){
-    if(words.length === 0){
-    timerStop();
-    score =Math.round((correct / Math.max(time,1))* 60);
-    fetch(window.typingData.saveUrl,
-        {
-            method: 'POST',
-            headers: {
-                'Content-Type':
-                'application/json',
-                'X-CSRF-TOKEN':
-            document.querySelector('meta[name="csrf-token"]').content,
-            },
-            body: JSON.stringify({
-                question_id:
+async function endGame()
+{
+    time =timerStop(startTime);
+    score =calculateScore(correct,time);
+    try{
+        const result =
+            await saveResult(
                 window.typingData.questionId,
-                score: score,
-                correct: correct,
-                input_time: time,
-            })
-        }
-    )
-    .then(response =>response.json())
-    .then(data => {window.location.href ='/typing/public/result/'+data.result_id;});
+                score,
+                correct,
+                time,
+                window.typingData.saveUrl
+            );
+
+        window.location.href ='/typing/public/result/' + result.result_id;
+    }catch(error){
+        console.error(error);
+        alert('結果の保存に失敗しました');
+    }
+}
+
+
+async function newWord(){
+    if(words.length === 0){
+    await endGame();
     return;
 }
     typingInput.value = "";
@@ -44,10 +44,10 @@ function newWord(){
     targetText.textContent = inWord;
 }
 
-typingInput.addEventListener("keydown",(event) => {
+typingInput.addEventListener("keydown",async (event) => {
     if(event.key === "Enter" && typingInput.value === inWord){
         correct += inWord.length;
-        newWord();
+        await newWord();
         count++;
         questionCount.textContent = count + " / " + wordsLength;
         
@@ -73,17 +73,11 @@ function countDown(){
         CDtime--;
         setTimeout(countDown,1000);
     }else{
-        targetText.textContent = "START!";
-        setTimeout(() => {newWord();timerStart();typingInput.focus();},500);
+        targetText.textContent ="START!";
+        setTimeout(() => {
+            newWord();
+            startTime =timerStart();typingInput.focus();},500);
     }
-}
-
-function timerStart(){
-  startTime = Date.now();
-}
-
-function timerStop(){
-    time = Math.floor((Date.now() - startTime) / 1000);
 }
 
 window.addEventListener('keydown', (e) => {

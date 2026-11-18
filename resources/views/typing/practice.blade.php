@@ -40,5 +40,6 @@ window.typingData = {
 };
 
 </script>
-<script src="{{ asset('js/typing.js') }}"></script>
+<script src="{{ asset('js/common.js') }}"></script>
+<script src="{{ asset('js/practice.js') }}"></script>
 @endsection

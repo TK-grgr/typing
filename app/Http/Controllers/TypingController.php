@@ -46,8 +46,21 @@ class TypingController extends Controller
      */
     public function show(string $id)
     {
-            $question = Question::with('details')->findOrFail($id);
-        return view('typing.show',compact('question'));
+            $question = Question::with('details')
+        ->findOrFail($id);
+
+    if ($question->level == 1) {
+
+        return view(
+            'typing.practice',
+            compact('question')
+        );
+    }
+
+    return view(
+        'typing.game',
+        compact('question')
+    );
     }
 
     /**
