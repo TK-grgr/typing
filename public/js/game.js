@@ -16,6 +16,27 @@ let currentIndex = 0;//入力中の文字位置取得
 let displayText = "";//表示用文字
 let currentText = "";//入力用文字
 let inWord = "";//入力予定文字
+let userInput = "";//過去の入力文字
+// const romanMap = {//複数方式入力対応
+
+//     si: ['si','shi'],
+
+//     ti: ['ti','chi'],
+
+//     tu: ['tu','tsu'],
+
+//     hu: ['hu','fu'],
+
+//     zi: ['zi','ji'],
+
+//     sya: ['sya','sha'],
+
+//     syu: ['syu','shu'],
+
+//     syo: ['syo','sho'],
+
+// };
+
 
 
 async function endGame()
@@ -110,6 +131,23 @@ window.addEventListener('keydown', (e) => {
     countDown();
   }
 });
+
+// function createCandidates(text){
+//     let candidates = [text];
+//     Object.entries(romanMap).forEach(([base, list]) => {
+//         const next = [];
+//         candidates.forEach(candidate => {
+//             if(
+//                 candidate.includes(base)
+//             ){
+//                 list.forEach(pattern => {
+//                     next.push(candidate.replace(base,pattern));
+//                 });
+//             }else{next.push(candidate);}
+//         });
+//         candidates = next;});
+//     return candidates;
+// }
 
 
 function calculateScore(){

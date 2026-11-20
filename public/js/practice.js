@@ -95,7 +95,7 @@ function calculateScore(){
 
     return Math.round(
         (correct / Math.max(time,1))
-        * 60
+        * 60 * 2//ゲームに合わせるために一文字を2点にする。
     );
 
 }
