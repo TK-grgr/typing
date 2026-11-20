@@ -23,6 +23,7 @@ window.typingData = {
     questionId: {{ $question->id }},
     details: @json($question->details),saveUrl:"{{ route('typing.saveResult') }}"};
 </script>
+{{--  TypingJpを使用 --}}
 <script src="https://cdn.jsdelivr.net/npm/@mogamoga1024/typing-jp@latest/dist/cdn/typing-jp.js"></script>
 <script src="{{ asset('js/common.js') }}"></script>
 <script src="{{ asset('js/game.js') }}"></script>
