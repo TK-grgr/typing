@@ -13,7 +13,7 @@
         <div id="targetText">
             Spaceキーで開始
         </div>
-        <div id="romanText">
+        <div id="ReadingText">
         </div>
     </div>
 </div>
@@ -23,6 +23,7 @@ window.typingData = {
     questionId: {{ $question->id }},
     details: @json($question->details),saveUrl:"{{ route('typing.saveResult') }}"};
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@mogamoga1024/typing-jp@latest/dist/cdn/typing-jp.js"></script>
 <script src="{{ asset('js/common.js') }}"></script>
 <script src="{{ asset('js/game.js') }}"></script>
 

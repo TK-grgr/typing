@@ -1,7 +1,7 @@
 const words =[...window.typingData.details];
 const targetText =document.getElementById('targetText');
 const questionCount =document.getElementById('questionCount');
-const RomanText = document.getElementById('romanText');
+const ReadingText = document.getElementById('ReadingText');
 const missCount = document.getElementById('missCount');
 const wordsLength = words.length;
 let score = 0;//スコア
@@ -12,30 +12,8 @@ let correct = 0;//入力文字数
 let CDtime = 3;//スタート後カウント時間
 let started = false;//開始フラグ
 let miss = 0;//ミス数
-let currentIndex = 0;//入力中の文字位置取得
-let displayText = "";//表示用文字
-let currentText = "";//入力用文字
 let inWord = "";//入力予定文字
-let userInput = "";//過去の入力文字
-// const romanMap = {//複数方式入力対応
-
-//     si: ['si','shi'],
-
-//     ti: ['ti','chi'],
-
-//     tu: ['tu','tsu'],
-
-//     hu: ['hu','fu'],
-
-//     zi: ['zi','ji'],
-
-//     sya: ['sya','sha'],
-
-//     syu: ['syu','shu'],
-
-//     syo: ['syo','sho'],
-
-// };
+let typingText = null;
 
 
 
@@ -69,44 +47,47 @@ async function newWord(){
 }
     inWord = words.splice(Math.floor(Math.random()* words.length),1)[0];
     displayText = inWord.text;
-    currentText = inWord.roman;
-    currentIndex = 0;
+    typingText = new TypingText(inWord.reading);
     targetText.textContent = displayText;
-    updateRomanText();
+    ReadingText.textContent = typingText.remainingRoman;
+
 }
 //文字入力正誤判定+現在問題カウント+現在入力文字位置取得
 window.addEventListener("keydown",async (event) => {
     //シフト、コントロール、エンター、Spaceなどを無視。
-    if(event.key.length !== 1){
+    if (!TypingText.isValidInputKey(event.key)) {
     return;
 }
     if(!started){
         return;
     }
-    if(!currentText){
+    if(!typingText){
     return;
 }
-    const currentChar = currentText[currentIndex];
-    if(event.key === currentChar){
-        currentIndex++;
-        updateRomanText();
-        correct++;
-        if(currentIndex >= currentText.length){
-            count ++;
-            questionCount.textContent = count + " / " + wordsLength;
-            await newWord();
-        }
-    }else{
-        miss++;
-        missCount.textContent ="ミス: " + miss;
+if(event.repeat){
+        return;
     }
+
+    const result = typingText.inputKey(event.key);
+    switch(result){
+        case "unmatch":
+            miss++;
+            missCount.textContent = "ミス:" + miss;
+            break;
+        case "incomplete":
+            correct++;
+            ReadingText.innerHTML = '<span class="done">' + typingText.completedRoman + '</span>' + typingText.remainingRoman;
+            break;
+        case 'complete':
+            correct++;
+            count++;
+            questionCount.textContent = count + '/' + wordsLength;
+            await newWord();
+            break;
+    }
+    
 });
 
-function updateRomanText(){
-    const done = currentText.slice(0,currentIndex);
-    const remain = currentText.slice(currentIndex);
-    RomanText.innerHTML = '<span class="done">' + done + '</span>' + remain;
-}
 
 function countDown(){
     if(CDtime > 0){
@@ -131,23 +112,6 @@ window.addEventListener('keydown', (e) => {
     countDown();
   }
 });
-
-// function createCandidates(text){
-//     let candidates = [text];
-//     Object.entries(romanMap).forEach(([base, list]) => {
-//         const next = [];
-//         candidates.forEach(candidate => {
-//             if(
-//                 candidate.includes(base)
-//             ){
-//                 list.forEach(pattern => {
-//                     next.push(candidate.replace(base,pattern));
-//                 });
-//             }else{next.push(candidate);}
-//         });
-//         candidates = next;});
-//     return candidates;
-// }
 
 
 function calculateScore(){

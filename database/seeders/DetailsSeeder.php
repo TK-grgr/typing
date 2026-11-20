@@ -78,52 +78,52 @@ class DetailsSeeder extends Seeder
 
     [
         'text' => '勇者は仲間と共に魔王城へ向かった。',
-        'roman' => 'yuusyahanakamatotomonimaoujouemukatta'
+        'reading' => 'ゆうしゃはなかまとともにまおうじょうへむかった'
     ],
 
     [
         'text' => '森の奥には巨大なドラゴンが眠っていた。',
-        'roman' => 'morinookunihakyodainadoragonganemutteita'
+        'reading' => 'morinookunihakyodainadoragonganemutteita'
     ],
 
     [
         'text' => '伝説の剣は神殿の奥深くに存在した。',
-        'roman' => 'densetunokenhasindennookuhukakunisonzaisita'
+        'reading' => 'densetunokenhasindennookuhukakunisonzaisita'
     ],
 
     [
         'text' => '冒険者たちは新たな依頼を受けた。',
-        'roman' => 'boukensyatatihaaratanairaiwouketa'
+        'reading' => 'boukensyatatihaaratanairaiwouketa'
     ],
 
     [
         'text' => '魔法使いは強力な呪文を唱えた。',
-        'roman' => 'mahoutukaihakyouryokunazyumonwotonaeta'
+        'reading' => 'mahoutukaihakyouryokunazyumonwotonaeta'
     ],
 
     [
         'text' => '戦士は盾を構えて攻撃を防いだ。',
-        'roman' => 'sensihatatewokamaetekougekiwohuseida'
+        'reading' => 'sensihatatewokamaetekougekiwohuseida'
     ],
 
     [
         'text' => '王国は平和を取り戻した。',
-        'roman' => 'oukokuhaheiwawotorimodosita'
+        'reading' => 'oukokuhaheiwawotorimodosita'
     ],
 
     [
         'text' => '宝箱の中には貴重なアイテムがあった。',
-        'roman' => 'takarabakononakanihakityounaitemugaatta'
+        'reading' => 'takarabakononakanihakityounaitemugaatta'
     ],
 
     [
-        'text' => '敵の大軍が城へ迫っていた。',
-        'roman' => 'tekinotaigungasirohesematteita'
+        'text' => '敵の大軍が城へ迫っていた',
+        'reading' => 'てきのたいぐんがしろへせまっていた'
     ],
 
     [
         'text' => '最後の決戦が始まろうとしていた。',
-        'roman' => 'saigonokessenhahazimaroutositeita'
+        'reading' => 'さいごのけっせんがはじまろうとしていた'
     ],
 
 ],
@@ -133,53 +133,53 @@ class DetailsSeeder extends Seeder
 6 => [
 
     [
-        'text' => '宇宙船は未知の惑星へ到着した。',
-        'roman' => 'uutyuusenhamitinowakuseietoutyakusita'
+        'text' => '宇宙船は未知の惑星へ到着した',
+        'reading' => 'うちゅうせんはみちのわくせいへとうちゃくした'
     ],
 
     [
-        'text' => '探索隊は周囲の調査を始めた。',
-        'roman' => 'tansakutaihasyuinotyousawohazimeta'
+        'text' => '探索隊は周囲の調査を始めた',
+        'reading' => 'たんけんたいはしゅういのちょうさをはじめた'
     ],
 
     [
-        'text' => '巨大な生物の足跡が発見された。',
-        'roman' => 'kyodainaseibutunoasiatogahakkensareta'
+        'text' => '巨大な生物の足跡が発見された',
+        'reading' => 'きょだいなせいぶつのあしあとがはっけんされた'
     ],
 
     [
-        'text' => '基地との通信は良好だった。',
-        'roman' => 'kititonotuusinharyoukoudatta'
+        'text' => '基地との通信は良好だった',
+        'reading' => 'きちとのつうしんはりょうこうだった'
     ],
 
     [
-        'text' => 'エネルギー残量は十分にあった。',
-        'roman' => 'enerugi-zanryouhajuubunniatta'
+        'text' => 'エネルギー残量は十分にあった',
+        'reading' => 'エネルギーざんりょうはじゅうぶんにあった'
     ],
 
     [
-        'text' => '隊員たちは慎重に行動した。',
-        'roman' => 'taiintatihasintyounikoudousita'
+        'text' => '隊員たちは慎重に行動した',
+        'reading' => 'たいいんたちはしんちょうにこうどうした'
     ],
 
     [
-        'text' => '古代文明の遺跡を発見した。',
-        'roman' => 'kodaibunmeinoisekiwohakkensita'
+        'text' => '古代文明の遺跡を発見した',
+        'reading' => 'こだいぶんめいのいせきをはっけんした'
     ],
 
     [
-        'text' => '不思議な装置が作動した。',
-        'roman' => 'husiginasoutigasadousita'
+        'text' => '不思議な装置が作動した',
+        'reading' => 'ふしぎなそうちがさどうした'
     ],
 
     [
-        'text' => '危険区域への侵入は禁止されていた。',
-        'roman' => 'kikenkuikihenosinnyuuhakinsisareteita'
+        'text' => '危険区域への侵入は禁止されていた',
+        'reading' => 'きけんくいきへのしんにゅうはきんしされていた'
     ],
 
     [
-        'text' => 'ミッションは順調に進行した。',
-        'roman' => 'missyonhazyuntyounisinkousita'
+        'text' => 'ミッションは順調に進行した',
+        'reading' => 'ミッションはじゅんちょうにしんこうした'
     ],
 
 ],
@@ -189,64 +189,63 @@ class DetailsSeeder extends Seeder
 7 => [
 
     [
-        'text' => 'スライムを倒した。',
-        'roman' => 'suraimuwotaosita'
-    ],
+    'text' => 'スライムを倒した',
+    'reading' => 'すらいむをたおした'
+],
 
-    [
-        'text' => 'レベルアップした。',
-        'roman' => 'reberuappusita'
-    ],
+[
+    'text' => 'レベルアップした',
+    'reading' => 'れべるあっぷした'
+],
 
-    [
-        'text' => '宝箱を発見した。',
-        'roman' => 'takarabakowohakkensita'
-    ],
+[
+    'text' => '宝箱を発見した',
+    'reading' => 'たからばこをはっけんした'
+],
 
-    [
-        'text' => '経験値を獲得した。',
-        'roman' => 'keikentiwokakutokusita'
-    ],
+[
+    'text' => '経験値を獲得した。',
+    'reading' => 'けいけんちをかくとくした'
+],
 
-    [
-        'text' => '新しい武器を入手した。',
-        'roman' => 'atarasiibukiwonyuusyusita'
-    ],
+[
+    'text' => '新しい武器を入手した。',
+    'reading' => 'あたらしいぶきをにゅうしゅした'
+],
 
-    [
-        'text' => 'クエストを達成した。',
-        'roman' => 'kuesutowotasseisita'
-    ],
+[
+    'text' => 'クエストを達成した。',
+    'reading' => 'くえすとをたっせいした'
+],
 
-    [
-        'text' => '仲間が増えた。',
-        'roman' => 'nakamagahueta'
-    ],
+[
+    'text' => '仲間が増えた。',
+    'reading' => 'なかまがふえた'
+],
 
-    [
-        'text' => 'ボスを撃破した。',
-        'roman' => 'bosuwogekihasita'
-    ],
+[
+    'text' => 'ボスを撃破した。',
+    'reading' => 'ぼすをげきはした'
+],
 
-    [
-        'text' => '回復薬を使用した。',
-        'roman' => 'kaifukuyakuwosiyousita'
-    ],
+[
+    'text' => '回復薬を使用した。',
+    'reading' => 'かいふくやくをしようした'
+],
 
-    [
-        'text' => 'セーブしました。',
-        'roman' => 'se-busimasita'
-    ],
+[
+    'text' => 'セーブしました。',
+    'reading' => 'せーぶしました'
+],
 
 ],
 
-            // ゲーム短文②
             // ゲーム短文②
 8 => [
 
     [
         'text' => '敵を発見した。',
-        'roman' => 'tekiwohakkensita'
+        'reading' => 'てきをはっけんした'
     ],
 
 ],
@@ -261,7 +260,7 @@ class DetailsSeeder extends Seeder
                     Detail::create([
                         'question_id' => $questionId,
                         'text' => $text['text'],
-                        'roman' => $text['roman'],
+                        'reading' => $text['reading'],
                     ]);
 
                 } else {
@@ -269,7 +268,7 @@ class DetailsSeeder extends Seeder
                     Detail::create([
                         'question_id' => $questionId,
                         'text' => $text,
-                        'roman' => null,
+                        'reading' => null,
                     ]);
 
                 }
