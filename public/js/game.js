@@ -4,6 +4,7 @@ const questionCount =document.getElementById('questionCount');
 const ReadingText = document.getElementById('ReadingText');
 const missCount = document.getElementById('missCount');
 const wordsLength = words.length;
+const HTML = document.documentElement;
 let score = 0;//スコア
 let time = 0;//経過時間
 let startTime;//開始時刻の取得
@@ -72,7 +73,9 @@ if(event.repeat){
     switch(result){
         case "unmatch":
             miss++;
+            highlight();
             missCount.textContent = "ミス:" + miss;
+
             break;
         case "incomplete":
             correct++;
@@ -113,6 +116,12 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
+function highlight(){
+HTML.classList.add('highlight');
+setTimeout(function(){
+    HTML.classList.remove('highlight');
+},50);
+}
 
 function calculateScore(){
     const accuracy = correct / Math.max(correct + miss,1);
