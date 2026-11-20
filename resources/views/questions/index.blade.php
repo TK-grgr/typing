@@ -123,7 +123,7 @@
 
                     <a
                         href="{{ route(
-                            'questions.show',
+                            'questions.edit',
                             $question->id
                         ) }}"
                         class="edit-btn">

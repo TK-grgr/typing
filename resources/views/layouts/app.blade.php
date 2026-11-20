@@ -19,7 +19,7 @@
                         <li><a href="{{ route('top') }}">ホーム</a></li>
                         <li><a href="{{ route('typing.index') }}">タイピング</a></li>
                         <li><a href="{{ route('Rank.index') }}">ランキング</a></li>
-                        <li><a href="">メニュー作成</a></li>
+                        <li><a href="{{ route('questions.create') }}">メニュー作成</a></li>
                         <li><a href="{{ route('Profile.index') }}" >プロフィール</a></li>
                         <li><a href="{{ route('logout') }}" 
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();" 

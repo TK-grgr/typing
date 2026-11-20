@@ -30,23 +30,10 @@
             <div class="form-group">
 
                 <label>
-                    問題番号
-                </label>
-
-                <input
-                    type="number"
-                    name="no"
-                    required>
-
-            </div>
-
-            <div class="form-group">
-
-                <label>
                     モード
                 </label>
 
-                <select name="level">
+                <select name="level" id = "level">
 
                     <option value="1">
                         実践
@@ -79,57 +66,50 @@
                 </select>
 
             </div>
-
+@if (Auth::check() && Auth::user()->role == 1)
             <div class="form-group">
-
                 <label>
                     公開状態
                 </label>
-
                 <select name="release">
-
                     <option value="1">
                         公開
                     </option>
-
                     <option value="0">
                         非公開
                     </option>
-
                 </select>
-
             </div>
-
+@endif
             <div class="form-group">
 
-                <label>
-                    問題文
-                </label>
-
-                <textarea
-                    name="text"
-                    rows="10"
-                    required></textarea>
+                <label>問題文</label>
+                <textarea name="text" rows="10" required placeholder="例:おはようございます
+こんにちは
+こんばんは"></textarea>
 
             </div>
+            <div
+    class="form-group"
+    id="readingArea"
+    style="display:none;"
+>
 
+    <label>
+        読み仮名
+    </label>
+
+    <textarea
+        name="reading"
+        rows="10"
+        placeholder="例:おはようございます
+こんにちは
+こんばんは"></textarea>
+</div>
             <div class="btn-area">
-
-                <a
-                    href="{{ route('questions.index') }}"
-                    class="back-btn">
-
-                    一覧へ戻る
-
-                </a>
-
-                <button
-                    type="submit"
-                    class="save-btn">
-
-                    作成
-
-                </button>
+                <a href="{{ route('questions.index') }}"
+                    class="back-btn">一覧へ戻る</a>
+                <button type="submit" class="save-btn">作成</button>
 
             </div>
 
@@ -138,5 +118,37 @@
     </div>
 
 </div>
+<script>
+
+const levelSelect =
+    document.getElementById('level');
+
+const readingArea =
+    document.getElementById('readingArea');
+
+function toggleReadingArea(){
+
+    if(levelSelect.value === '2'){
+
+        readingArea.style.display =
+            'block';
+
+    }else{
+
+        readingArea.style.display =
+            'none';
+
+    }
+
+}
+
+levelSelect.addEventListener(
+    'change',
+    toggleReadingArea
+);
+
+toggleReadingArea();
+
+</script>
 
 @endsection
