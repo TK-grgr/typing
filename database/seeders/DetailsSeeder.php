@@ -81,39 +81,33 @@ class DetailsSeeder extends Seeder
         'reading' => 'ゆうしゃはなかまとともにまおうじょうへむかった'
     ],
 
-    [
-        'text' => '森の奥には巨大なドラゴンが眠っていた。',
-        'reading' => 'morinookunihakyodainadoragonganemutteita'
+[
+        'text' => '森の奥には巨大なドラゴンが眠っていた',
+        'reading' => 'もりのおくにはきょだいなどらごんがねむっていた'
     ],
-
     [
-        'text' => '伝説の剣は神殿の奥深くに存在した。',
-        'reading' => 'densetunokenhasindennookuhukakunisonzaisita'
+        'text' => '伝説の剣は神殿の奥深くに存在した',
+        'reading' => 'でんせつのけんはしんでんのおくふかくにそんざいした'
     ],
-
     [
-        'text' => '冒険者たちは新たな依頼を受けた。',
-        'reading' => 'boukensyatatihaaratanairaiwouketa'
+        'text' => '冒険者たちは新たな依頼を受けた',
+        'reading' => 'ぼうけんしゃたちはあらたないらいをうけた'
     ],
-
     [
-        'text' => '魔法使いは強力な呪文を唱えた。',
-        'reading' => 'mahoutukaihakyouryokunazyumonwotonaeta'
+        'text' => '魔法使いは強力な呪文を唱えた',
+        'reading' => 'まほうつかいはきょうりょくなじゅもんをとなえた'
     ],
-
     [
-        'text' => '戦士は盾を構えて攻撃を防いだ。',
-        'reading' => 'sensihatatewokamaetekougekiwohuseida'
+        'text' => '戦士は盾を構えて攻撃を防いだ',
+        'reading' => 'せんしはたてをかまえてこうげきをふせいだ'
     ],
-
     [
-        'text' => '王国は平和を取り戻した。',
-        'reading' => 'oukokuhaheiwawotorimodosita'
+        'text' => '王国は平和を取り戻した',
+        'reading' => 'おうこくはへいわをとりもどした'
     ],
-
     [
-        'text' => '宝箱の中には貴重なアイテムがあった。',
-        'reading' => 'takarabakononakanihakityounaitemugaatta'
+        'text' => '宝箱の中には貴重なアイテムがあった',
+        'reading' => 'たからばこのなかにはきちょうなあいてむがあった'
     ],
 
     [
