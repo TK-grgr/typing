@@ -39,43 +39,38 @@ class QuestionController extends Controller
      */
     public function store(Request $request)
     {
-        $question = Question::create([
+       $isAdmin = Auth::check() && Auth::user()->role == 1;
+    $release = $isAdmin ? $request->release : 0;
 
+    $question = Question::create([
         'title' => $request->title,
-
-        'no' => $request->no,
-
         'type' => $request->type,
-
         'level' => $request->level,
-
-        'release' => $request->release,
-
+        'release' => $release,
     ]);
 
-    $lines = preg_split(
-        "/\r\n|\n|\r/",
-        trim($request->text)
-    );
+    $textLines = preg_split("/\r\n|\n|\r/", trim($request->text ?? ''));
+    $readingLines = preg_split("/\r\n|\n|\r/", trim($request->reading ?? ''));
 
-    foreach ($lines as $line) {
-
-        if (trim($line) === '') {
+    foreach ($textLines as $i => $line) {
+        $text = trim($line);
+        if ($text === '') {
             continue;
         }
 
+        $reading = ($request->level == 2 && isset($readingLines[$i]) && trim($readingLines[$i]) !== '')
+            ? trim($readingLines[$i])
+            : null;
+
         Detail::create([
-
             'question_id' => $question->id,
-
-            'text' => trim($line),
-
+            'text' => $text,
+            'reading' => $reading !== '' ? $reading : null,
         ]);
     }
 
     return redirect()
         ->route('questions.index');
-
     }
 
     /**
@@ -103,53 +98,69 @@ class QuestionController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-    {
-        //
+{
+    if (!Auth::check() || Auth::user()->role != 1) {
+        abort(403);
     }
+
+    $question = Question::with('details')->findOrFail($id);
+
+    $text = $question->details
+        ->pluck('text')
+        ->implode("\n");
+
+    $reading = $question->details
+        ->pluck('reading')
+        ->implode("\n");
+
+    return view(
+        'questions.edit',
+        compact(
+            'question',
+            'text',
+            'reading'
+        )
+    );
+}
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,string $id)
+    public function update(Request $request, string $id)
 {
+    if (!Auth::check() || Auth::user()->role != 1) {
+        abort(403);
+    }
+
     $question = Question::findOrFail($id);
 
     $question->update([
-
         'title' => $request->title,
-
         'no' => $request->no,
-
         'type' => $request->type,
-
         'level' => $request->level,
-
         'release' => $request->release,
-
     ]);
 
-    Detail::where(
-        'question_id',
-        $question->id
-    )->delete();
+    Detail::where('question_id', $question->id)->delete();
 
-    $lines = preg_split(
-        "/\r\n|\n|\r/",
-        trim($request->text)
-    );
+    $textLines = preg_split("/\r\n|\n|\r/", trim($request->text ?? ''));
+    $readingLines = preg_split("/\r\n|\n|\r/", trim($request->reading ?? ''));
 
-    foreach ($lines as $line) {
-
-        if(trim($line) === ''){
+    foreach ($textLines as $i => $line) {
+        $text = trim($line);
+        if ($text === '') {
             continue;
         }
 
+        $reading = ($request->level == 2 && isset($readingLines[$i]) && trim($readingLines[$i]) !== '')
+            ? trim($readingLines[$i])
+            : null;
+
         Detail::create([
-
             'question_id' => $question->id,
-
-            'text' => trim($line),
-
+            'text' => $text,
+            'reading' => $reading !== '' ? $reading : null,
         ]);
     }
 

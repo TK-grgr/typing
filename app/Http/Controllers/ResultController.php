@@ -62,7 +62,15 @@ class ResultController extends Controller
      */
     public function show(string $id)
     {
+        $result = Result::with([
+        'question',
+        'user'
+    ])->findOrFail($id);
 
+    return view(
+        'result.show',
+        compact('result')
+    );
     }
 
     /**

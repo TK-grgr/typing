@@ -10,23 +10,38 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\QuestionController;
+<<<<<<< HEAD
+use App\Http\Controllers\TypingController;
+use Illuminate\Http\Request;
+=======
 
+>>>>>>> 715e17024a4b11123c3df8f9176dfd7625ab527b
 
 Route::get('/', function () {
     return view('welcome');
 });
 Route::middleware('guest')->group(function(){
 
-Route::controller(LoginController::class)->group(function(){
-Route::get('/login','login')->name('login');
-Route::post('/login','loginCheck')->name('login_store');
-Route::get('/passChange','passChange')->name('passChange');
-});
-Route::resource('signup',SignupController::class);
-Route::post('/forgot-password',[PasswordResetController::class,'sendResetLinkEmail'])->name('password.email');
-Route::get('/reset-password/{token}', function ($token) {
-        return view('auth.reset-password', ['token' => $token]);
+Route::controller(LogInController::class)->group(function () {
+        Route::get('/login', 'login')->name('login');
+        Route::post('/login', 'loginCheck')->name('login_store');
+        Route::get('/passChange', 'passChange')->name('passChange');
+    });
+
+    Route::resource('signup', SignupController::class);
+
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', function (Request $request, $token) {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email', ''),
+        ]);
     })->name('password.reset');
+
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->name('password.update');
 });
 
 Route::middleware('auth')->group(function(){

@@ -6,6 +6,21 @@ use Illuminate\Database\Eloquent\Model;
 
 class Result extends Model
 {
+    protected $fillable = [
+
+    'user_id',
+
+    'question_id',
+
+    'score',
+
+    'correct',
+
+    'miss',
+
+    'input_time',
+
+];
     public function user()
 {
     return $this->belongsTo(User::class);

@@ -12,6 +12,8 @@ class Detail extends Model
 
     'text',
 
+    'roman',
+
 ];
 
 public function question()
