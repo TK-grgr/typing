@@ -17,7 +17,7 @@
                 <ul class="nav-menu">
                         {{-- <li class="left-nav-text"><a href="">プロフィール</a></li> --}}
                         <li><a href="{{ route('top') }}">ホーム</a></li>
-                        <li><a href="{{ route('typing.index') }}">タイピング</a></li>
+                        <li><a href="">タイピング</a></li>
                         <li><a href="{{ route('Rank.index') }}">ランキング</a></li>
                         <li><a href="{{ route('questions.create') }}">メニュー作成</a></li>
                         <li><a href="{{ route('Profile.index') }}" >プロフィール</a></li>

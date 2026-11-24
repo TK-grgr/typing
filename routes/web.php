@@ -10,8 +10,12 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
 use App\Http\Controllers\QuestionController;
+<<<<<<< HEAD
 use App\Http\Controllers\TypingController;
 use Illuminate\Http\Request;
+=======
+
+>>>>>>> 715e17024a4b11123c3df8f9176dfd7625ab527b
 
 Route::get('/', function () {
     return view('welcome');
@@ -49,8 +53,6 @@ Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
-Route::post('/typing/save-result',[TypingController::class,'saveResult'])->name('typing.saveResult');
-Route::resource('typing',TypingController::class);
 
 });
 
