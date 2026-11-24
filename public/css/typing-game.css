@@ -1,0 +1,236 @@
+.typing-game-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    background: #fff;
+}
+
+.typing-game-page > .nav,
+.typing-game-page > .nav * {
+    box-sizing: border-box;
+}
+
+/* 共通ヘッダーの上書きはゲーム画面に限定する。 */
+.typing-game-page > .nav {
+    position: relative;
+    top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.typing-game-page .nav-logo {
+    flex: 0 0 auto;
+    padding-block: 8px;
+}
+
+.typing-game-page .nav-img {
+    display: block;
+    width: clamp(140px, 14vw, 200px);
+    height: auto;
+    margin-left: clamp(16px, 1.67vw, 24px);
+}
+
+.typing-game-page .nav-menu {
+    min-width: 0;
+    gap: clamp(8px, 1.6vw, 24px);
+    padding: 10px clamp(16px, 1.67vw, 24px);
+    border-top: 0;
+    font-size: clamp(12px, 1.1vw, 15px);
+    line-height: 1.4;
+}
+
+.typing-game-page .nav-menu a {
+    display: inline-block;
+    padding-left: clamp(8px, 1.1vw, 16px);
+}
+
+.typing-game-page .nav-menu-end {
+    margin-right: 0;
+}
+
+.typing-game,
+.typing-game * {
+    box-sizing: border-box;
+}
+
+.typing-game {
+    display: grid;
+    grid-template-rows: auto minmax(min-content, 1fr) auto;
+    gap: clamp(8px, 1.5dvh, 16px);
+    width: 100%;
+    max-width: 1440px;
+    min-width: 0;
+    min-height: 0;
+    margin-inline: auto;
+    padding-block: clamp(12px, 3dvh, 32px);
+    background: #fff;
+    color: #000;
+    font-family: Arial, "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.typing-game__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-inline-end: clamp(16px, 2.15vw, 31px);
+}
+
+.typing-game__clock {
+    margin: 0;
+    font-size: clamp(14px, 2dvh, 20px);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.typing-game__mode {
+    display: grid;
+    place-items: center;
+    width: clamp(180px, 20.8vw, 280px);
+    min-height: clamp(52px, 8dvh, 80px);
+    margin: 0;
+    padding: 8px 24px;
+    border-radius: 0 999px 999px 0;
+    background: #d9d9d9;
+    font-size: clamp(22px, 3dvh, 32px);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.typing-game__question {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: calc(100% - 160px);
+    min-width: 0;
+    margin: 0 auto;
+    text-align: center;
+    overflow-wrap: anywhere;
+    transform: translateX(-40px);
+}
+
+.typing-game__text {
+    margin: 0;
+    font-size: clamp(24px, 3.7dvh, 40px);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+.typing-game__kana {
+    margin: 0;
+    font-size: clamp(18px, 2.9dvh, 32px);
+    line-height: 1.5;
+}
+
+.typing-game__romaji {
+    margin: 0;
+    font-size: clamp(18px, 2.9dvh, 32px);
+    line-height: 1.5;
+    letter-spacing: clamp(3px, 0.55vw, 8px);
+}
+
+.typing-game__keyboard {
+    width: calc(100% - 62px);
+    height: min(40dvh, 406px);
+    margin: 0 31px;
+    padding: clamp(16px, 3.52dvh, 38px) 19px clamp(26px, 7.4dvh, 80px) 26px;
+    border: 1px solid #000;
+    background: #d9d9d9;
+}
+
+.typing-game__key-layout {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.typing-game__key {
+    position: absolute;
+    top: var(--key-top);
+    left: var(--key-left);
+    width: var(--key-width);
+    height: var(--key-height);
+    border: 1px solid #000;
+    background: #d9d9d9;
+    display: grid;
+    place-items: center;
+    padding: 2px;
+    color: #000;
+    font-size: clamp(9px, 0.95vw, 14px);
+    font-weight: 600;
+    line-height: 1.05;
+    text-align: center;
+    white-space: pre-line;
+    overflow: hidden;
+}
+
+.typing-game__key.is-next { background: #ffe66b; }
+.typing-game__key.is-pressed { background: #808080; }
+.typing-game__key.is-correct { background: #72c7ff; }
+.typing-game__key.is-wrong { background: #ff7777; }
+.typing-game__romaji { min-height: 1.5em; }
+
+.typing-game__key--enter {
+    --key-top: 25.8741258741%;
+    --key-left: 90.3007518797%;
+    --key-width: 9.6240601504%;
+    --key-height: 48.2517482517%;
+
+    border: 0;
+    background: transparent;
+}
+
+.typing-game__key--enter svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.typing-game__key--enter.is-pressed {
+    background: transparent;
+}
+
+.typing-game__key--enter.is-pressed path {
+    fill: #808080;
+}
+
+.typing-game__key-label {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #000;
+    font-size: clamp(10px, 1vw, 15px);
+    font-weight: 600;
+    line-height: 1;
+}
+
+@media (max-width: 900px) {
+    .typing-game-page > .nav {
+        flex-wrap: wrap;
+    }
+
+    .typing-game-page .nav-menu {
+        flex: 1 1 480px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* マウスなどを使うPCでウィンドウを狭めた場合の余白を調整する。 */
+@media (max-width: 900px) and (hover: hover) and (pointer: fine) {
+    .typing-game__question {
+        width: calc(100% - 48px);
+        transform: none;
+    }
+
+    .typing-game__keyboard {
+        width: calc(100% - 32px);
+        margin-inline: 16px;
+        padding-inline: 14px;
+    }
+}

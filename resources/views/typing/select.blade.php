@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>タイピングメニュー選択 | TypeUp</title>
+@extends('layouts.app')
+
+@section('main')
     <link rel="stylesheet" href="{{ asset('css/typing.css') }}">
+    <script>
+        // 共通ファイルを変更せず、選択画面だけの表示設定を適用する。
+        document.body.classList.add('typing-select-page');
+        document.title = 'タイピングメニュー選択 | TypeUp';
+    </script>
     <script src="{{ asset('js/typing-select.js') }}" defer></script>
-</head>
-<body class="typing-select-page">
-    {{-- 将来の共通ヘッダーはmainの前に組み込める。今回はヘッダーを出力しない。 --}}
+
     <main
         class="typing-select"
         data-typing-select
@@ -40,14 +40,14 @@
             aria-labelledby="typing-tab-{{ $initialTab }}"
         >
             <div class="typing-select__choices">
-                @foreach ($groups as $group)
-                    <section class="typing-select__group" aria-labelledby="typing-heading-{{ $group['id'] }}">
-                        <h2 class="typing-select__heading" id="typing-heading-{{ $group['id'] }}">{{ $group['label'] }}</h2>
+                @foreach ($groups as $type => $group)
+                    <section class="typing-select__group" aria-labelledby="typing-heading-{{ $type }}">
+                        <h2 class="typing-select__heading" id="typing-heading-{{ $type }}">{{ $group['label'] }}</h2>
 
                         <div
                             class="typing-select__question-list"
                             role="region"
-                            aria-labelledby="typing-heading-{{ $group['id'] }}"
+                            aria-labelledby="typing-heading-{{ $type }}"
                             tabindex="0"
                         >
                             @foreach ($group['items'] as $item)
@@ -55,9 +55,13 @@
                                     class="typing-select__question"
                                     type="button"
                                     data-question-id="{{ $item['id'] }}"
-                                    aria-label="{{ $group['label'] }}の選択肢 {{ $loop->iteration }}"
+                                    data-question-mode="{{ $item['mode'] }}"
+                                    data-question-type="{{ $type }}"
+                                    title="{{ $item['title'] }}{{ $item['playable'] ? '' : '（現在出題できる問題セットではありません）' }}"
                                     aria-pressed="{{ $item['id'] === $initialQuestion ? 'true' : 'false' }}"
-                                ></button>
+                                    @if ($item['mode'] !== $initialTab) hidden @endif
+                                    @disabled(!$item['playable'])
+                                >{{ $item['title'] }}</button>
                             @endforeach
                         </div>
                     </section>
@@ -68,9 +72,8 @@
 
             <div class="typing-select__actions">
                 <button class="typing-select__action" type="button">戻る</button>
-                <button class="typing-select__action" type="button">開始</button>
+                <button class="typing-select__action" type="button" data-typing-start data-game-url="{{ route('typing.game') }}" @disabled($initialQuestion === null)>開始</button>
             </div>
         </div>
     </main>
-</body>
-</html>
+@endsection

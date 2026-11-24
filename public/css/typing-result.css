@@ -1,0 +1,204 @@
+.typing-result-page {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+    background: #fff;
+}
+
+.typing-result-page > .nav,
+.typing-result-page > .nav * {
+    box-sizing: border-box;
+}
+
+/* typing-game.cssと同じヘッダー寸法を、結果画面にだけ適用する。 */
+.typing-result-page > .nav {
+    position: relative;
+    top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 0;
+}
+
+.typing-result-page .nav-logo {
+    flex: 0 0 auto;
+    padding-block: 8px;
+}
+
+.typing-result-page .nav-img {
+    display: block;
+    width: clamp(140px, 14vw, 200px);
+    height: auto;
+    margin-left: clamp(16px, 1.67vw, 24px);
+}
+
+.typing-result-page .nav-menu {
+    min-width: 0;
+    gap: clamp(8px, 1.6vw, 24px);
+    padding: 10px clamp(16px, 1.67vw, 24px);
+    border-top: 0;
+    font-size: clamp(12px, 1.1vw, 15px);
+    line-height: 1.4;
+}
+
+.typing-result-page .nav-menu a {
+    display: inline-block;
+    padding-left: clamp(8px, 1.1vw, 16px);
+}
+
+.typing-result-page .nav-menu-end {
+    margin-right: 0;
+}
+
+.typing-result,
+.typing-result * {
+    box-sizing: border-box;
+}
+
+.typing-result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 5.2dvh, 54px);
+    width: 100%;
+    max-width: 1440px;
+    min-width: 0;
+    min-height: 0;
+    margin-inline: auto;
+    padding: clamp(16px, 3dvh, 32px) clamp(16px, 2.15vw, 31px);
+    color: #000;
+    font-family: Arial, "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
+}
+
+.typing-result__card {
+    display: grid;
+    flex: 0 0 auto;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: min(1018px, 74%);
+    height: min(60dvh, 561px);
+    padding: clamp(20px, 3dvh, 32px) clamp(20px, 2.22vw, 32px) clamp(20px, 3.3dvh, 36px);
+    border-radius: 20px;
+    background: #d9d9d9;
+    transform: translateX(-22px);
+}
+
+.typing-result__title {
+    margin: 0;
+    padding-block: clamp(16px, 4.7dvh, 50px) clamp(16px, 3.3dvh, 36px);
+    border-bottom: 3px solid #000;
+    font-size: clamp(18px, 2.3dvh, 24px);
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    overflow-wrap: anywhere;
+}
+
+.typing-result__metrics {
+    position: relative;
+    display: grid;
+    grid-template-rows: repeat(var(--metric-count), minmax(0, 1fr));
+    justify-self: center;
+    width: 75%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding-top: clamp(8px, 1.9dvh, 20px);
+}
+
+.typing-result__metrics::after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: #000;
+    content: "";
+}
+
+.typing-result__metric {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    min-width: 0;
+    min-height: 0;
+}
+
+.typing-result__metric dt,
+.typing-result__metric dd {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    margin: 0;
+    padding: 4px 10px;
+    border-bottom: 1px solid #a5a5a5;
+    font-size: clamp(16px, 2dvh, 20px);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.typing-result__metric dd {
+    justify-content: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.typing-result__actions {
+    display: grid;
+    flex: 0 0 auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px;
+    width: min(820px, 60%);
+    transform: translateX(-10px);
+}
+
+.typing-result__action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: clamp(60px, 10dvh, 103px);
+    padding: 12px 16px;
+    background: #d9d9d9;
+    color: #000;
+    font-size: clamp(20px, 3dvh, 32px);
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+
+.typing-result__action:focus-visible {
+    outline: 3px solid #005a73;
+    outline-offset: -5px;
+}
+
+@media (max-width: 900px) {
+    .typing-result-page > .nav {
+        flex-wrap: wrap;
+    }
+
+    .typing-result-page .nav-menu {
+        flex: 1 1 480px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* マウスなどを使うPCでウィンドウを狭めても、成績の項目とボタンに幅を確保する。 */
+@media (max-width: 900px) and (hover: hover) and (pointer: fine) {
+    .typing-result__card {
+        width: 94%;
+        transform: none;
+    }
+
+    .typing-result__metrics {
+        width: 90%;
+    }
+
+    .typing-result__actions {
+        width: 86%;
+        transform: none;
+    }
+}
