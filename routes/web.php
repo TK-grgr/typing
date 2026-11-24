@@ -9,13 +9,8 @@ use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
-use App\Http\Controllers\QuestionController;
-<<<<<<< HEAD
-use App\Http\Controllers\TypingController;
 use Illuminate\Http\Request;
-=======
-
->>>>>>> 715e17024a4b11123c3df8f9176dfd7625ab527b
+use App\Http\Controllers\QuestionController;
 
 Route::get('/', function () {
     return view('welcome');

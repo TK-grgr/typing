@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 @section('main') 
 <div class="wrapper">
     <div class="flex-item">
-        <a href="{{ route('typing.index') }}">タイピング</a>
+        <a href="">タイピング</a>
         <a href="{{ route('Rank.index') }}">ランキング</a>
     </div>
     <a href="{{ route('questions.create') }}">メニュー作成</a>
