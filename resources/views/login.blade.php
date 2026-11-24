@@ -7,7 +7,7 @@
     <div class="wrapper">
         <div class="blank"></div>
         <div class="center-item">
-            <img src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}">
+            <img src="{{ asset('images/TypeUpロゴ.png') }}">
         </div>
         <div class="blank"></div>
         <div class="login-form">

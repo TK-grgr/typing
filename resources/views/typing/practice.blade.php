@@ -15,7 +15,7 @@
     <div class="typing-area">
 
         <div id="questionCount">
-            1 / 10
+            0 / 10
         </div>
 
         <div id="targetText">Spaceキーで開始。</div>

@@ -11,7 +11,7 @@
     <nav class="nav">
         <div class="nav-logo">
             <a href="{{ route('top') }}">
-                <img class="nav-img" src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}"alt="TypeUp">
+                <img class="nav-img" src="{{ asset('images/TypeUpロゴ.png') }}"alt="TypeUp">
             </a>
         </div>
                 <ul class="nav-menu">
