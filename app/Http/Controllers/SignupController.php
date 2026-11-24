@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\SignupRequest;
 use App\Models\User;
+use App\Models\School;
+use App\Models\SchoolClass;
 
 class SignupController extends Controller
 {
@@ -21,7 +23,9 @@ class SignupController extends Controller
      */
     public function create()
     {
-        return view('signup.create');
+        $schools = School::get();
+        $classes = SchoolClass::get();
+        return view('signup.create',compact('schools','classes'));
     }
 
     /**
