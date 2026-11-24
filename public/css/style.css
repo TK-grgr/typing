@@ -82,6 +82,10 @@ table {
     margin-right: 2rem;
 }
 
+.red-text{
+    color: rgb(255, 96, 96);
+}
+
 .nav-menu a:hover{
     color: #5156B8;
 }
@@ -358,18 +362,15 @@ table {
 }
 
 .edit-btn{
-
     display: inline-block;
-
     padding: 8px 15px;
-
     text-decoration: none;
-
     border: 1px solid #4a72ff;
-
     color: #4a72ff;
-
     border-radius: 5px;
+}
+.edit-btn:hover{
+    background-color: #f9f9f9;
 }
 
 .edit-card{
@@ -428,13 +429,9 @@ table {
 }
 
 .btn-area{
-
     display: flex;
-
     justify-content: flex-end;
-
     gap: 10px;
-
     margin-top: 30px;
 }
 
@@ -447,6 +444,11 @@ table {
     border: none;
 
     padding: 10px 20px;
+
+    border-radius: 8px;
+}
+.save-btn:hover{
+    background:#6C72D9;
 }
 
 .back-btn{

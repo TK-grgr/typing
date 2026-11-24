@@ -13,7 +13,7 @@ class SchoolsSeeder extends Seeder
     public function run(): void
     {
         School::create([
-            'name'      => '大原簿記情報医療専門学校岐阜校',
+            'name'      => 'テスト校',
         ]);
     }
 }

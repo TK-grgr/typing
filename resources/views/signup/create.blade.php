@@ -5,7 +5,7 @@
     <div class="blank"></div>
         <div class="login-form">
             <div class="right-item">
-                <a href="{{ route('login') }}"><img class="signup-img" src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}"></a>
+                <a href="{{ route('login') }}"><img class="signup-img" src="{{ asset('images/TypeUpロゴ.png') }}"></a>
             </div>
             <h1 class="center-item">新規登録</h1>
             <form action="{{ route('signup.store') }}" method="POST">
@@ -19,10 +19,12 @@
                 </div>
                 <div class="form-group">
                     <label>所属校</label><br>
-                    <select class="form-control" name="school_id">
+                    <select class="form-control" name="school_id" id="school_id">
                         <option value="">--所属校を選択--</option>
                         {{-- テストデータです --}}
-                        <option value="1">大原簿記情報医療専門学校岐阜校</option>
+                        @foreach ($schools as $school)
+                            <option value="{{ $school->id }}">{{ $school->name }}</option>
+                        @endforeach
                     </select>
                     @error('school_id')
                     <div style="color:red">{{ $message }}</div>
@@ -30,10 +32,12 @@
                 </div>
                 <div class="form-group">
                     <label>クラス</label><br>
-                    <select class="form-control" name="class_id">
+                    <select class="form-control" name="class_id" id="class_id" disabled>
                         <option value="">--クラスを選択--</option>
                         {{-- テストデータです --}}
-                        <option value="1">2 - I</option>
+                        @foreach ($classes as $class)
+                        <option value="{{ $class->id }}" data-school="{{ $class->school_id }}">{{ $class->name }}</option>
+                        @endforeach
                     </select>
                     @error('class_id')
                     <div style="color:red">{{ $message }}</div>
@@ -63,4 +67,43 @@
             </div>
         </div>
     </div>
+    <script>
+
+const schoolSelect =
+    document.getElementById('school_id');
+
+const classSelect =
+    document.getElementById('class_id');
+
+schoolSelect.addEventListener('change', () => {
+
+    const schoolId =
+        schoolSelect.value;
+
+    classSelect.disabled = false;
+
+    const options =
+        classSelect.querySelectorAll('option');
+
+    options.forEach(option => {
+
+        if(option.value === ''){
+            option.hidden = false;
+            return;
+        }
+
+        if(option.dataset.school === schoolId){
+            option.hidden = false;
+        }else{
+            option.hidden = true;
+        }
+
+    });
+
+    classSelect.value = '';
+
+});
+
+
+</script>
 @endsection

@@ -14,7 +14,7 @@ class ClassesSeeder extends Seeder
     {
         SchoolClass::create([
             'school_id' => 1,
-            'name'      => '2-I',
+            'name'      => 'テスト組',
         ]);
     }
 }

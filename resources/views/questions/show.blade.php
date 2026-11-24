@@ -50,7 +50,7 @@
                     モード
                 </label>
 
-                <select name="level">
+                <select name="level" id = "level">
 
                     <option
                         value="1"
@@ -95,33 +95,22 @@
                         短文
 
                     </option>
-
                 </select>
-
             </div>
-
             <div class="form-group">
-
                 <label>
                     公開状態
                 </label>
-
                 <select name="release">
-
                     <option
                         value="1"
                         {{ $question->release == 1 ? 'selected' : '' }}>
-
                         公開
-
                     </option>
-
                     <option
                         value="0"
                         {{ $question->release == 0 ? 'selected' : '' }}>
-
                         非公開
-
                     </option>
 
                 </select>
@@ -139,24 +128,27 @@
                     rows="12">{{ $text }}</textarea>
 
             </div>
+            <div
+    class="form-group"
+    id="readingArea"
+    style="display:none;"
+>
 
+    <label>
+        読み仮名
+    </label>
+
+    <textarea
+        name="reading"
+        rows="10"
+        placeholder="例:おはようございます
+こんにちは
+こんばんは">{{ $reading }}</textarea>
+</div>
             <div class="btn-area">
-
-                <a
-                    href="{{ route('questions.index') }}"
-                    class="back-btn">
-
-                    一覧へ戻る
-
-                </a>
-
-                <button
-                    type="submit"
-                    class="save-btn">
-
-                    保存
-
-                </button>
+                <a href="{{ route('questions.index') }}"
+                    class="back-btn">一覧へ戻る</a>
+                <button type="submit" class="save-btn">作成</button>
 
             </div>
 
@@ -196,5 +188,37 @@
     </div>
 
 </div>
+<script>
+
+const levelSelect =
+    document.getElementById('level');
+
+const readingArea =
+    document.getElementById('readingArea');
+
+function toggleReadingArea(){
+
+    if(levelSelect.value === '2'){
+
+        readingArea.style.display =
+            'block';
+
+    }else{
+
+        readingArea.style.display =
+            'none';
+
+    }
+
+}
+
+levelSelect.addEventListener(
+    'change',
+    toggleReadingArea
+);
+
+toggleReadingArea();
+
+</script>
 
 @endsection

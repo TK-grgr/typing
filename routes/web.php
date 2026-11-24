@@ -3,38 +3,56 @@
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LogInController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RankController;
 use App\Http\Controllers\ResultController;
 use App\Http\Controllers\SignupController;
 use App\Http\Controllers\TopController;
+use Illuminate\Http\Request;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\TypingController;
 use App\Http\Controllers\TypingGameController;
 use App\Http\Controllers\TypingResultController;
 use App\Http\Controllers\TypingResultStoreController;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware('guest')->group(function(){
 
-Route::controller(LoginController::class)->group(function(){
-Route::get('/login','login')->name('login');
-Route::post('/login','loginCheck')->name('login_store');
-Route::post('/logout','logout')->name('logout');
-Route::get('/passChange','passChange')->name('passChange');
+Route::controller(LogInController::class)->group(function () {
+        Route::get('/login', 'login')->name('login');
+        Route::post('/login', 'loginCheck')->name('login_store');
+        Route::get('/passChange', 'passChange')->name('passChange');
+    });
+
+    Route::resource('signup', SignupController::class);
+
+    Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail'])
+        ->name('password.email');
+
+    Route::get('/reset-password/{token}', function (Request $request, $token) {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email', ''),
+        ]);
+    })->name('password.reset');
+
+    Route::post('/reset-password', [PasswordResetController::class, 'reset'])
+        ->name('password.update');
 });
 
+Route::middleware('auth')->group(function(){
+
+Route::post('/logout', [LogInController::class, 'logout'])->name('logout');
 Route::get('/top',[TopController::class,'index'])->name('top');
-Route::resource('signup',SignupController::class);
 Route::resource('result',ResultController::class);
 Route::resource('Rank',RankController::class);
 Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
 
-Route::middleware('auth')->group(function () {
     Route::get('/typing', [TypingController::class, 'select'])->name('typing.select');
     Route::get('/typing/game', [TypingGameController::class, 'show'])->name('typing.game');
     Route::post('/typing/game/resume', [TypingGameController::class, 'resume'])->name('typing.game.resume');

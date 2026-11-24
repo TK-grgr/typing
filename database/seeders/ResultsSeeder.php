@@ -15,7 +15,7 @@ class ResultsSeeder extends Seeder
         for ($i = 1; $i <= 20; $i++) {
 
             Result::create([
-                'user_id'      => 2,
+                'user_id'      => 1,
                 'question_id'  => 1,
                 'score'        => rand(100, 1000),
                 'correct'      => rand(20, 100),

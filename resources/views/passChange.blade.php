@@ -5,11 +5,11 @@
     <div class="blank"></div>
         <div class="login-form">
             <div class="right-item">
-                <a href="{{ route('login') }}"><img class="signup-img" src="{{ asset('images/キーボードと上昇矢印のTypeUpロゴ 1.png') }}"></a>
+                <a href="{{ route('login') }}"><img class="signup-img" src="{{ asset('images/TypeUpロゴ.png') }}"></a>
             </div>
             <h1 class="center-item">パスワード再設定</h1>
             {{-- パスワードリセットは未実装 --}}
-            <form action="" method="POST">
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
                 <div class="form-group">
                     <label>メールアドレス</label><br>
