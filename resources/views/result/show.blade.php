@@ -27,7 +27,7 @@
         </div>
         <div class="result-row">
             <span class="result-label">プレイ日時</span>
-            <span class="result-value">{{ $result->created_at->format('Y/m/d H:i') }}</span>
+            <span class="result-value">{{ $result->created_at->format('Y/m/d') }}</span>
         </div>
         <div class="btn-area">
         <a href="{{ route('typing.show',$result->question_id) }}"class="save-btn">もう一度挑戦</a>
