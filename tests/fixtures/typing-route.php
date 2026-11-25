@@ -49,6 +49,10 @@ $fixtures = [
     [35, 2, 1, 1, 'よみがからのセット', [['問題', '']]],
 ];
 
+if (($argv[2] ?? '') === 'digit-reading') {
+    $fixtures[] = [36, 2, 1, 1, '数字のセット', [['ん7あ', 'ん7あ']]];
+}
+
 foreach ($fixtures as [$id, $type, $level, $release, $title, $lines]) {
     if (($argv[2] ?? '') === 'empty' && $id !== 32) {
         continue;

@@ -6,6 +6,7 @@
     const text = root.querySelector('[data-typing-text]');
     const kana = root.querySelector('[data-typing-kana]');
     const guide = root.querySelector('[data-typing-romaji]');
+    const keyboardInput = root.querySelector('[data-typing-keyboard-input]');
     const startPrompt = root.querySelector('[data-typing-start]');
     const clock = root.querySelector('[data-typing-elapsed]');
     const saveStatus = root.querySelector('[data-typing-save-status]');
@@ -110,9 +111,21 @@
         const done = document.createElement('span');
         done.style.color = '#777';
         done.textContent = state.typed.toUpperCase();
-        guide.replaceChildren(done, document.createTextNode(state.complete ? '' : state.remaining.toUpperCase()));
+        const remaining = state.complete ? '' : state.remaining;
+        guide.replaceChildren(done, document.createTextNode(remaining.toUpperCase()));
+        if (keyboardInput) {
+            keyboardInput.firstElementChild.textContent = state.displayInput;
+            keyboardInput.hidden = guide.hidden;
+        }
         keys.forEach(k => k.classList.remove('is-next'));
-        if (!state.complete) state.nextKeys.forEach(key => guideKey(key)?.classList.add('is-next'));
+        if (!state.complete) {
+            for (const key of state.nextKeys) {
+                // ガイドにない記号の別入力は、キーに印字された文字との混同を避けるため黄色表示しない。
+                if (key === remaining[0] || key === ' ' || !Object.hasOwn(jisLabels, key)) {
+                    guideKey(key)?.classList.add('is-next');
+                }
+            }
+        }
         root.dataset.inputComplete = String(state.complete);
         root.dataset.correctCount = String(correct);
         root.dataset.missCount = String(miss);

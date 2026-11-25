@@ -44,18 +44,41 @@
         // 1問ごとに独立した状態を作り、同じ入力途中まで一致する候補をすべて保持する。
         function create() {
             let states=[{rest:'',to:0}], typed='';
-            const options=()=>states.flatMap(s=>s.rest?[s]:edges[s.to].map(e=>({rest:e.word,to:e.to})));
+            const options=()=>states.flatMap(s=>s.rest?[s]:edges[s.to].map(e=>({rest:e.word,to:e.to,from:s.to,length:e.word.length})));
             const complete=()=>states.some(s=>!s.rest&&s.to===n);
+            // 有効な候補すべてが通過した読みの境界まで表示し、残りの打鍵はローマ字で残す。
+            function displayInput() {
+                if (complete()) return chars.join('');
+
+                let confirmed = n, pending = 0;
+                for (const { rest, to, from, length } of states) {
+                    const entered = rest ? length - rest.length : 0;
+                    // 子音の重ね打ちは、2打目で「っ」が確定し、2打目自体は次の音に使う。
+                    const geminate = rest && entered >= 2 && chars[from] === 'っ' && to > from + 1 ? 1 : 0;
+                    const boundary = rest ? from + geminate : to;
+                    const suffix = entered - geminate;
+
+                    if (boundary < confirmed) {
+                        confirmed = boundary;
+                        pending = suffix;
+                    } else if (boundary === confirmed) {
+                        pending = Math.max(pending, suffix);
+                    }
+                }
+
+                return chars.slice(0, confirmed).join('') + (pending ? typed.slice(-pending) : '');
+            }
             return {
                 // 次の文字が一致する候補だけを進め、候補がなければ現在の状態を維持する。
                 push(key) {
                     key=key.toLowerCase();
-                    const next=options().filter(s=>s.rest[0]===key).map(s=>({rest:s.rest.slice(1),to:s.to}));
+                    const next=options().filter(s=>s.rest[0]===key).map(s=>({...s,rest:s.rest.slice(1)}));
                     if(!next.length)return false;
                     states=[...new Map(next.map(s=>[s.to+':'+s.rest,s])).values()]; typed+=key; return true;
                 },
                 get complete(){return complete();},
                 get typed(){return typed;},
+                get displayInput(){return displayInput();},
                 get nextKeys(){return [...new Set(options().map(s=>s.rest[0]))];},
                 get remaining(){return states.map(s=>s.rest+best[s.to]).reduce((a,b)=>a.length<=b.length?a:b);}
             };

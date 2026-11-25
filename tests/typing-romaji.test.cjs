@@ -26,6 +26,29 @@ check('terminal n accepted', () => assert.equal(romaji.accepts(K(0x307b,0x3093),
 const long = K(...Array(100).fill([0x3057,0x3093,0x3076,0x3093]).flat());
 const start = performance.now(); romaji.minimumLength(long); const elapsed = performance.now() - start;
 check('long text performance', () => assert.ok(elapsed < 1000, `(${elapsed}ms)`));
+for (const [kana, spelling, previews] of [
+  ['としょかん', 'tosyokann', ['t', 'と', 'とs', 'とsy', 'としょ', 'としょk', 'としょか', 'としょかん', 'としょかん']],
+  ['としょかん', 'toshokan', ['t', 'と', 'とs', 'とsh', 'としょ', 'としょk', 'としょか', 'としょかん']],
+  ['かんい', 'kanni', ['k', 'か', 'かn', 'かん', 'かんい']],
+  ['かんい', "kan'i", ['k', 'か', 'かn', 'かん', 'かんい']],
+  ['しんぶん', 'shinbun', ['s', 'sh', 'し', 'しn', 'しんb', 'しんぶ', 'しんぶん']],
+  ['がっこう', 'gakkou', ['g', 'が', 'がk', 'がっk', 'がっこ', 'がっこう']],
+  ['がっこう', 'gaxtukou', ['g', 'が', 'がx', 'がxt', 'がっ', 'がっk', 'がっこ', 'がっこう']],
+  ['まっちゃ', 'maccha', ['m', 'ま', 'まc', 'まっc', 'まっch', 'まっちゃ']],
+  ['まっちゃ', 'matcha', ['m', 'ま', 'まt', 'まっc', 'まっch', 'まっちゃ']],
+  ['きゃ', 'kya', ['k', 'ky', 'きゃ']],
+  ['きゃ', 'kixya', ['k', 'き', 'きx', 'きxy', 'きゃ']],
+  ['カナ７、。', 'kana7,.', ['k', 'か', 'かn', 'かな', 'かな7', 'かな7、', 'かな7、。']],
+]) {
+  check(`${kana}: display while typing ${spelling}`, () => {
+    const input = romaji.compile(kana).create();
+    assert.equal(input.displayInput, '');
+    for (const [index, key] of [...spelling].entries()) {
+      assert.equal(input.push(key), true);
+      assert.equal(input.displayInput, previews[index], `after ${spelling.slice(0, index + 1)}`);
+    }
+  });
+}
 if (failures.length) console.error(failures.join('\n'));
 console.log(`${count - failures.length}/${count} passed; ${failures.length} failed; long text ${elapsed.toFixed(1)}ms`);
 if (failures.length) process.exitCode = 1;

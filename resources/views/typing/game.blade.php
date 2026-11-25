@@ -71,6 +71,9 @@
                     </svg>
                 </span>
             </div>
+            @if ($mode === 'practice')
+                <p class="typing-game__keyboard-input" data-typing-keyboard-input aria-hidden="true" hidden><span></span></p>
+            @endif
         </figure>
         <nav class="typing-game__actions" aria-label="ゲーム操作">
             <a href="{{ $selectUrl }}" data-typing-exit>途中終了</a>

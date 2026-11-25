@@ -29,7 +29,7 @@ function renderRoute(url, scenario) {
 const decode = value => value.replaceAll('&quot;', '"').replaceAll('&amp;', '&');
 const savedResponse = async () => ({ ok: true, json: async () => ({ resultId: 12, score: 314, rank: 2 }) });
 function startGame(url, random, session = new Map(), reply = savedResponse, page = {}) {
-    const html = renderRoute(url);
+    const html = renderRoute(url, page.scenario);
     assert.doesNotMatch(html, /結果画面へ（確認用）/);
     assert.match(html, /href="[^"]*\/typing" data-typing-exit>途中終了/);
     const attribute = name => decode(html.match(new RegExp(`data-${name}="([^"]*)"`))[1]);
@@ -41,6 +41,8 @@ function startGame(url, random, session = new Map(), reply = savedResponse, page
     assert.match(html, /data-typing-romaji hidden/);
     const text = { hidden: true }, kana = { hidden: true };
     const guide = { hidden: true, replaceChildren(...children) { this.children = children; } };
+    const keyboardInput = html.includes('data-typing-keyboard-input aria-hidden="true" hidden')
+        ? { hidden: true, firstElementChild: { textContent: '' } } : undefined;
     const prompt = { hidden: false }, clock = { textContent: '00:00' };
     const saveStatus = { hidden: true };
     const retry = { hidden: true, addEventListener(name, callback) { this[name] = callback; } };
@@ -48,10 +50,11 @@ function startGame(url, random, session = new Map(), reply = savedResponse, page
     const elements = {
         '[data-typing-text]': text, '[data-typing-kana]': kana, '[data-typing-romaji]': guide,
         '[data-typing-start]': prompt, '[data-typing-elapsed]': clock,
+        '[data-typing-keyboard-input]': keyboardInput,
         '[data-typing-save-status]': saveStatus, '[data-typing-save-retry]': retry,
         '[data-typing-exit]': exit,
     };
-    const keys = Array.from('ABCDEFGHIJKLMNOPQRSTUVWXYZ,.', key => {
+    const keys = Array.from(html.matchAll(/\bdata-key="([^"]+)"/g), ([, key]) => {
         const classes = new Set();
         return { dataset: { key }, classes, classList: {
             add: name => classes.add(name), remove: (...names) => names.forEach(name => classes.delete(name)),
@@ -107,7 +110,7 @@ function startGame(url, random, session = new Map(), reply = savedResponse, page
     };
     const advance = ms => { now += ms; };
     const restoreVisibility = () => handlers.visibilitychange.forEach(handler => handler());
-    return { questions: JSON.parse(questions), text, kana, guide, prompt, clock, keys, timers, intervals, navigations,
+    return { questions: JSON.parse(questions), text, kana, guide, keyboardInput, prompt, clock, keys, timers, intervals, navigations,
         type, advance, restoreVisibility, data: root.dataset, romaji: browser.TypingRomaji, session, writes, requests,
         resumeRequests, history, exit, retry, saveStatus };
 }
@@ -142,6 +145,7 @@ for (const [mode, type, set, count, expected] of [
         const url = new URL(`http://localhost/typing/game?mode=${mode}&type=${type}&set=${set}`);
         const game = startGame(url, 0);
         assert.equal(game.questions.length, count);
+        assert.equal(game.keyboardInput?.hidden, mode === 'practice' ? true : undefined);
         for (const [text, kana] of expected) {
             assert.deepEqual(game.questions.find(question => question.text === text), { text, kana });
         }
@@ -158,6 +162,7 @@ for (const [mode, type, set, count, expected] of [
         game.type(' ');
         game.type(' ', { repeat: true });
         assert.ok(game.prompt.hidden && !game.text.hidden && !game.kana.hidden && !game.guide.hidden);
+        assert.equal(game.keyboardInput?.hidden, mode === 'practice' ? false : undefined);
         assert.equal(game.data.correctCount, '0');
         assert.equal(game.data.missCount, '0');
         assert.equal(game.intervals.size, 1);
@@ -169,6 +174,7 @@ for (const [mode, type, set, count, expected] of [
             assert.equal(game.text.textContent, question.text);
             assert.equal(game.kana.textContent, question.kana);
             assert.equal(game.guide.children[0].textContent, '');
+            assert.equal(game.keyboardInput?.firstElementChild.textContent, mode === 'practice' ? '' : undefined);
             const spelling = game.guide.children[1];
             assert.equal(game.timers.size, 0);
             assert.equal(game.keys.some(key => key.classes.has('is-correct') || key.classes.has('is-wrong')), false);
@@ -178,7 +184,11 @@ for (const [mode, type, set, count, expected] of [
             assert.equal(Number(game.data.missCount), index + 1);
             assert.equal(game.navigations.length, 0);
             assert.equal(game.requests.length, 0);
-            for (const key of spelling.toLowerCase()) game.type(key);
+            const [first, ...rest] = spelling.toLowerCase();
+            game.type(first);
+            const firstPreview = { a: 'あ', i: 'い', u: 'う', e: 'え', o: 'お' }[first] ?? first;
+            assert.equal(game.keyboardInput?.firstElementChild.textContent, mode === 'practice' ? firstPreview : undefined);
+            for (const key of rest) game.type(key);
             correct += spelling.length;
             assert.equal(Number(game.data.correctCount), correct);
             assert.equal(game.clock.textContent, '01:02');
@@ -230,6 +240,40 @@ for (const [mode, type, set, count, expected] of [
         assert.equal(replay.data.inputComplete, 'false');
     });
 }
+
+test('an alternate nasal apostrophe does not highlight the JIS 7 key', () => {
+    const url = new URL('http://localhost/typing/game?mode=practice&type=word&set=11');
+    const game = startGame(url, 0.999);
+    const key7 = game.keys.find(key => key.dataset.key === '7');
+    game.type(' ');
+    assert.equal(game.kana.textContent, 'しんぶん');
+    for (const key of 'shin') game.type(key);
+    assert.equal(game.guide.children[1], 'BUN');
+    assert.deepEqual(game.keys.filter(key => key.classes.has('is-next')).map(key => key.dataset.key).sort(), ['B', 'N']);
+    game.type('7', { code: 'Digit7' });
+    assert.ok(key7.classes.has('is-wrong'));
+    assert.equal(game.data.missCount, '1');
+    game.type("'", { code: 'Digit7', shiftKey: true });
+    assert.ok(key7.classes.has('is-correct'));
+    assert.equal(game.guide.children[0].textContent, "SHIN'");
+    assert.equal(game.guide.children[1], 'BUN');
+});
+
+test('a literal 7 in the reading is highlighted and accepted after N', () => {
+    const url = new URL('http://localhost/typing/game?mode=practice&type=word&set=36');
+    const game = startGame(url, 0, new Map(), savedResponse, { scenario: 'digit-reading' });
+    const key7 = game.keys.find(key => key.dataset.key === '7');
+    game.type(' ');
+    game.type('n');
+    assert.equal(game.guide.children[1], '7A');
+    assert.ok(key7.classes.has('is-next'));
+    game.type('7', { code: 'Digit7' });
+    assert.ok(key7.classes.has('is-correct'));
+    assert.equal(game.guide.children[0].textContent, 'N7');
+    assert.equal(game.keyboardInput.firstElementChild.textContent, 'ん7');
+    assert.equal(game.guide.children[1], 'A');
+    assert.equal(game.data.missCount, '0');
+});
 
 test('an interrupted save can be retried using the same attempt', async () => {
     const url = new URL('http://localhost/typing/game?mode=game&type=word&set=13');
@@ -304,6 +348,24 @@ test('reloading before SPACE keeps the order, original attempt and waiting clock
     assert.equal(readProgress(restored).attempt, original.attempt);
 });
 
+test('practice restores confirmed kana and pending romaji after a miss and reload', async () => {
+    const game = startGame(practiceWords, 0.999);
+    game.type(' ');
+    for (const key of 'shin') game.type(key);
+    game.type('7', { code: 'Digit7' });
+    assert.equal(game.keyboardInput.firstElementChild.textContent, 'しn');
+    const restored = reloadGame(game);
+    await flushPromises();
+    assert.equal(restored.keyboardInput.firstElementChild.textContent, 'しn');
+    assert.equal(restored.guide.children[0].textContent, 'SHIN');
+    assert.equal(restored.data.missCount, '1');
+    restored.type('b');
+    assert.equal(restored.keyboardInput.firstElementChild.textContent, 'しんb');
+    for (const key of 'un') restored.type(key);
+    assert.equal(restored.text.textContent, '学校');
+    assert.equal(restored.keyboardInput.firstElementChild.textContent, '');
+});
+
 test('repeated reloads restore alternate input, counts, elapsed time and the last question', async () => {
     let game = startGame(practiceWords, 0.999);
     game.advance(2000);
@@ -317,8 +379,9 @@ test('repeated reloads restore alternate input, counts, elapsed time and the las
     assert.equal(game.prompt.hidden, true);
     assert.equal(game.text.textContent, '新聞');
     assert.equal(game.guide.children[0].textContent, 'S');
+    assert.equal(game.keyboardInput.firstElementChild.textContent, 's');
     assert.equal(game.guide.children[1], 'INBUN');
-    assert.deepEqual(game.keys.filter(key => key.classes.has('is-next')).map(key => key.dataset.key), ['H', 'I']);
+    assert.deepEqual(game.keys.filter(key => key.classes.has('is-next')).map(key => key.dataset.key).sort(), ['H', 'I']);
     assert.equal(game.data.correctCount, '1');
     assert.equal(game.data.missCount, '1');
     assert.equal(game.data.elapsedMs, '13250');
