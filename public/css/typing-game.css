@@ -101,6 +101,7 @@
     overflow-wrap: anywhere;
 }
 
+/* 問題本文とゲーム用の読み・ガイドを、出題領域の中央に配置する。 */
 .typing-game__question {
     display: flex;
     flex-direction: column;
@@ -133,6 +134,7 @@
     letter-spacing: clamp(3px, 0.55vw, 8px);
 }
 
+/* キーボードの外枠と、キーを配置するための余白を定義する。 */
 .typing-game__keyboard {
     --keyboard-padding-top: clamp(16px, 3.52dvh, 38px);
     width: calc(100% - 62px);
@@ -149,38 +151,100 @@
     background: #f5f5f5;
 }
 
+/* 実践の入力欄をキーボードの上に重ね、先頭を一段目のキーに揃える。 */
 .typing-game__keyboard-input {
     position: absolute;
     z-index: 1;
     inset: var(--keyboard-padding-top) 19px 8px 26px;
+    width: calc(100% - 45px);
+    height: calc(100% - var(--keyboard-padding-top) - 8px);
     margin: 0;
-    overflow: hidden;
-    pointer-events: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    resize: none;
     color: #000;
+    caret-color: #000;
     font: 600 clamp(18px, 3dvh, 30px) / 1.3 monospace;
     white-space: break-spaces;
     overflow-wrap: anywhere;
 }
 
-.typing-game__keyboard-input:not([hidden]) {
+.typing-game__keyboard-input:focus {
+    outline: 0;
+}
+
+.typing-game[data-mode="practice"] {
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+}
+
+.typing-game[data-mode="practice"] .typing-game__question {
+    overflow: auto;
+    justify-content: safe center;
+}
+
+/* 両モードで途中終了を左下に揃え、実践では中央に件数、右に問題移動を置く。 */
+.typing-game__actions {
+    margin-inline: 31px;
+    font-size: clamp(12px, 1.8dvh, 18px);
+}
+
+.typing-game__actions :is([data-typing-exit], [data-typing-previous], [data-typing-next]) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 14px;
+    border: 1px solid #999;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #222;
+    font: inherit;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.typing-game__actions :is([data-typing-exit], [data-typing-previous], [data-typing-next]):hover:not(:disabled) {
+    background: #e4e4e4;
+}
+
+.typing-game__actions :is([data-typing-exit], [data-typing-previous], [data-typing-next]):focus-visible {
+    outline: 2px solid #005a73;
+    outline-offset: 2px;
+}
+
+.typing-game__navigation button:disabled {
+    color: #777;
+    cursor: default;
+}
+
+.typing-game[data-mode="practice"] .typing-game__actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: 8px;
+}
+
+.typing-game[data-mode="practice"] .typing-game__actions > a,
+.typing-game[data-mode="practice"] [data-typing-save-retry] {
+    justify-self: start;
+}
+
+.typing-game__errors,
+.typing-game__navigation {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    white-space: nowrap;
 }
 
-.typing-game__keyboard-input > span {
-    /* 通常は一段目から表示し、高さを超えた場合は入力末尾を見せる。 */
-    flex: none;
-    min-height: 100%;
+.typing-game__errors {
+    justify-content: center;
 }
 
-.typing-game__keyboard-input > span::after {
-    content: '';
-    display: inline-block;
-    width: 2px;
-    height: 1em;
-    background: currentColor;
-    vertical-align: -0.13em;
+.typing-game__navigation {
+    justify-content: end;
 }
 
 .typing-game__key-layout {
@@ -215,6 +279,7 @@
     font-size: 0;
 }
 
+/* ゲームの次のキー、押下中、正打、誤打を色で区別する。 */
 .typing-game__key.is-next { background: #ffe66b; }
 .typing-game__key.is-pressed { background: #808080; }
 .typing-game__key.is-correct { background: #72c7ff; }
@@ -290,7 +355,12 @@
         padding-inline: 14px;
     }
 
+    .typing-game__actions {
+        margin-inline: 16px;
+    }
+
     .typing-game__keyboard-input {
         inset-inline: 14px;
+        width: calc(100% - 28px);
     }
 }

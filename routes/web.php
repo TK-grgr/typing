@@ -53,6 +53,7 @@ Route::resource('/Profile',ProfileController::class);
 Route::resource('admin',AdminController::class);
 Route::resource('questions',QuestionController::class);
 
+    // ログイン済みの利用者向けに、タイピングの選択・出題・再開・成績表示と保存を提供する。
     Route::get('/typing', [TypingController::class, 'select'])->name('typing.select');
     Route::get('/typing/game', [TypingGameController::class, 'show'])->name('typing.game');
     Route::post('/typing/game/resume', [TypingGameController::class, 'resume'])->name('typing.game.resume');

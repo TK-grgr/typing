@@ -4,9 +4,11 @@
 
     const storageKey = 'typing.gameProgress';
     const isCount = value => Number.isSafeInteger(value) && value >= 0;
+    const validCounts = counts => ['correct', 'typo', 'omission', 'extra'].every(key => isCount(counts?.[key]));
     // 成績保存の応答を検証する。順位を取得できなかった場合の null も有効とする。
-    const validReceipt = value => Number.isSafeInteger(value?.resultId) && value.resultId > 0 &&
-        Number.isInteger(value.score) && (value.rank === null || (isCount(value.rank) && value.rank > 0));
+    const validReceipt = (value, practice = false) => Number.isSafeInteger(value?.resultId) && value.resultId > 0 &&
+        Number.isInteger(value.score) && (value.rank === null || (isCount(value.rank) && value.rank > 0)) &&
+        (!practice || validCounts(value.counts));
 
     // 再読み込みに限り、履歴のプレイトークンとユーザー・セット・問題データが一致する記録を読む。
     function read(identity, compiled, now) {
@@ -20,9 +22,10 @@
             // 出題順の重複、問題番号と履歴の不一致、開始・終了時刻や保存状態の矛盾を検出する。
             const { order, questionIndex, completedInputs, typed, correct, miss, startedAt, elapsedMs, saveState, receipt } = saved;
             const total = compiled.length;
+            const practice = identity.mode === 'practice';
             if (!Array.isArray(order) || order.length !== total || new Set(order).size !== total ||
                 !order.every(index => isCount(index) && index < total) || !isCount(questionIndex) || questionIndex > total ||
-                !Array.isArray(completedInputs) || completedInputs.length !== questionIndex ||
+                !Array.isArray(completedInputs) || completedInputs.length !== (practice ? 0 : questionIndex) ||
                 typeof typed !== 'string' || !isCount(correct) || !isCount(miss)) return null;
 
             const finished = questionIndex === total;
@@ -33,9 +36,22 @@
             }
             if (finished) {
                 if (typed !== '' || !isCount(elapsedMs) || elapsedMs > Math.floor(now - startedAt) ||
-                    !['pending', 'failed', 'saved'].includes(saveState) || (saveState === 'saved' && !validReceipt(receipt))) return null;
+                    !['pending', 'failed', 'saved'].includes(saveState) || (saveState === 'saved' && !validReceipt(receipt, practice))) return null;
             } else if (saveState !== 'idle' || elapsedMs !== null) {
                 return null;
+            }
+
+            // 実践は出題順と問題ごとの回答を照合し、移動済みの問題が集計済みか確かめる。
+            if (practice) {
+                const { answers, checked } = saved.practice ?? {};
+                if (!Array.isArray(answers) || answers.length !== total ||
+                    !answers.every(answer => typeof answer === 'string' && answer.length <= window.TypingPractice.maxLength) ||
+                    !Array.isArray(checked) || checked.length !== total ||
+                    !checked.every(value => typeof value === 'boolean') ||
+                    typed !== '' || (startedAt === null && (answers.some(Boolean) || checked.some(Boolean))) ||
+                    !order.slice(0, questionIndex).every(index => checked[index])) return null;
+
+                return saved;
             }
 
             // 入力済みのキーを判定器に直接再生する。候補の分岐も再現でき、UI の正打数には加算されない。

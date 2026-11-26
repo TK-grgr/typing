@@ -16,7 +16,7 @@
         てぃ:['thi','texi'],でぃ:['dhi','dexi'],ふぁ:['fa','fuxa'],
         'ー':['-'],'、':[','],'。':['.'],'・':['/'],'「':['['],'」':[']'],'　':[' '],' ':[' '],'！':['!'],'？':['?'],'（':['('],'）':[')'],'：':[':'],'；':[';'],'／':['/'],'－':['-']
     };
-    // A DAG of local spellings; never enumerate complete sentences.
+    // 全文の候補は列挙せず、読みの位置ごとの候補だけを持つ。
     // 読みの位置ごとに遷移を作り、後ろから最短の入力経路を求める。
     function compile(text) {
         const chars = Array.from(text.normalize('NFKC').toLowerCase(), c => /[ァ-ヶ]/.test(c) ? String.fromCharCode(c.charCodeAt(0)-96) : c);
@@ -36,6 +36,7 @@
                 }
             } else {
                 const small={ゃ:['xya','lya'],ゅ:['xyu','lyu'],ょ:['xyo','lyo'],ぁ:['xa','la'],ぃ:['xi','li'],ぅ:['xu','lu'],ぇ:['xe','le'],ぉ:['xo','lo']};
+                // 拗音などをまとめて入力する経路と、仮名を個別に打つ経路を残す。
                 if(map[pair]) for(const v of map[pair]) add(v,i+2);
                 for(const v of map[c]||small[c]||[c]) add(v,i+1);
             }

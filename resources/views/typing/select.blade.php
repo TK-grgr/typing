@@ -18,6 +18,7 @@
     >
         <h1 class="typing-select__title" id="typing-select-title">タイピングメニュー選択</h1>
 
+        {{-- 実践とゲームを切り替えるモードタブ。 --}}
         <div class="typing-select__tabs" role="tablist" aria-label="タイピングの種類">
             @foreach ($tabs as $tab)
                 <button
@@ -39,6 +40,7 @@
             role="tabpanel"
             aria-labelledby="typing-tab-{{ $initialTab }}"
         >
+            {{-- 種別ごとの問題一覧。出題可否と選択状態は各セットに持たせる。 --}}
             <div class="typing-select__choices">
                 @foreach ($groups as $type => $group)
                     <section class="typing-select__group" aria-labelledby="typing-heading-{{ $type }}">
@@ -70,6 +72,7 @@
 
             <div class="typing-select__divider" aria-hidden="true"></div>
 
+            {{-- 選択条件が揃ったときだけ開始できる。 --}}
             <div class="typing-select__actions">
                 <button class="typing-select__action" type="button">戻る</button>
                 <button class="typing-select__action" type="button" data-typing-start data-game-url="{{ route('typing.game') }}" @disabled($initialQuestion === null)>開始</button>

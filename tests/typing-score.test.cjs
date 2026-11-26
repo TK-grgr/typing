@@ -1,3 +1,4 @@
+// 4条件の採点式と境界値を検証し、PHPの保存用スコアと比較する。
 const assert = require('node:assert/strict');
 const { execFileSync } = require('node:child_process');
 const fs = require('node:fs');
@@ -11,7 +12,7 @@ const base = { mode: 'game', type: 'word', correct: 90, miss: 30, elapsedMs: 30_
 
 for (const [mode, type, score] of [
     ['game', 'word', 1013], ['game', 'long', 1406],
-    ['practice', 'word', 2000], ['practice', 'long', 203],
+    ['practice', 'word', 1013], ['practice', 'long', 1013],
 ]) {
     test(`score: ${mode} × ${type}`, () => {
         const result = calculate({ ...base, mode, type });
@@ -27,8 +28,8 @@ test('perfect accuracy and an uncapped score', () => {
     assert.equal(result.score, 54_000_000);
 });
 
-test('practice word keeps negative scores and rounds half away from zero', () => {
-    assert.equal(calculate({ ...base, mode: 'practice', correct: 1, miss: 2, elapsedMs: 16_000 }).score, -63);
+test('practice never gives a negative score and rounds at the end', () => {
+    assert.equal(calculate({ ...base, mode: 'practice', correct: 1, miss: 2, elapsedMs: 16_000 }).score, 4);
 });
 
 test('no keystrokes produce zero accuracy, speed and score', () => {
@@ -53,10 +54,10 @@ test('milliseconds and unrounded accuracy are used until the final rounding', ()
     assert.equal(result.score, 2059);
 });
 
-test('practice long uses the shortest keystroke count for its length bonus', () => {
+test('practice long does not use the shortest keystroke count', () => {
     const play = { ...base, mode: 'practice', type: 'long' };
-    assert.equal(calculate({ ...play, minimumKeystrokes: 0 }).score, 135);
-    assert.equal(calculate({ ...play, minimumKeystrokes: 250 }).score, 270);
+    assert.equal(calculate({ ...play, minimumKeystrokes: undefined }).score, 1013);
+    assert.equal(calculate({ ...play, minimumKeystrokes: 250 }).score, 1013);
 });
 
 test('invalid or incomplete results cannot produce metrics', () => {

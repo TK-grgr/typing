@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+// 読みから最短打鍵数を求め、ブラウザのローマ字判定との一致を検証できるようにする。
 class TypingMinimumKeystrokes
 {
     // typing-romaji.js の組み合わせごとに最短候補の長さだけを持つ。

@@ -2,23 +2,28 @@
 (() => {
     'use strict';
     const root = document.querySelector('.typing-game[data-question-set]');
-    if (!root || !window.TypingRomaji || !window.TypingProgress) return;
+    if (!root || !window.TypingProgress) return;
+    const practice = root.dataset.mode === 'practice';
+    const comparison = window.TypingPractice;
     const text = root.querySelector('[data-typing-text]');
     const kana = root.querySelector('[data-typing-kana]');
     const guide = root.querySelector('[data-typing-romaji]');
     const keyboardInput = root.querySelector('[data-typing-keyboard-input]');
+    const previousButton = root.querySelector('[data-typing-previous]');
+    const nextButton = root.querySelector('[data-typing-next]');
     const startPrompt = root.querySelector('[data-typing-start]');
     const clock = root.querySelector('[data-typing-elapsed]');
     const saveStatus = root.querySelector('[data-typing-save-status]');
     const retry = root.querySelector('[data-typing-save-retry]');
     const exit = root.querySelector('[data-typing-exit]');
-    if (!text || !kana || !guide || !startPrompt || !clock) return;
+    if (!text || !startPrompt || !clock ||
+        (practice ? !comparison || !keyboardInput || !previousButton || !nextButton : !window.TypingRomaji || !kana || !guide)) return;
 
     const questions = JSON.parse(root.dataset.questions);
     if (!questions.length) return;
-    // 読み仮名ごとに判定器を準備し、採点に使う全問の最短打鍵数を合計する。
-    const compiledQuestions = questions.map(question => window.TypingRomaji.compile(question.kana));
-    const minimumKeystrokes = compiledQuestions.reduce((total, question) => total + question.minimumLength, 0);
+    // ゲームは読み仮名ごとに判定器を準備し、実践は本文を照合用に渡す。
+    const compiledQuestions = practice ? questions : questions.map(question => window.TypingRomaji.compile(question.kana));
+    const minimumKeystrokes = practice ? 0 : compiledQuestions.reduce((total, question) => total + question.minimumLength, 0);
     const progress = window.TypingProgress;
     const identity = { userId: root.dataset.playerId, setId: root.dataset.questionSet,
         mode: root.dataset.mode, type: root.dataset.questionType, revision: root.dataset.questionRevision };
@@ -43,13 +48,17 @@
     let startedAt = null;
     let clockInterval;
     let correct = 0, miss = 0, timer;
+    let answers = practice ? questions.map(() => '') : null;
+    let checked = practice ? questions.map(() => false) : null;
+    let reviewedCounts = practice ? questions.map(() => null) : null;
 
-    // 入力や問題切り替えの都度、復元に必要な打鍵履歴・時刻・保存状態を記録する。
+    // ゲームの打鍵履歴または実践の回答に、時刻・保存状態を添えて記録する。
     function saveProgress() {
         if (abandoned) return;
         progress.write({ identity, attempt, order, questionIndex, completedInputs,
             typed: finished ? '' : state?.typed ?? '', correct, miss, startedAt,
-            elapsedMs: completedPlay?.elapsedMs ?? null, saveState, receipt: savedReceipt });
+            elapsedMs: completedPlay?.elapsedMs ?? null, saveState, receipt: savedReceipt,
+            ...(practice ? { practice: { answers, checked } } : {}) });
     }
     const normalizeKeyName = name => name?.replace(/\s+/g, '').toUpperCase();
     const keysByName = new Map(keys.map(key => [normalizeKeyName(key.dataset.key), key]));
@@ -90,6 +99,7 @@
         event.code && event.code !== 'Unidentified' ? event.code : `${event.location}:${event.key.toUpperCase()}`
     );
     document.addEventListener('keydown', event => {
+        if (practice) return;
         const key = physicalKey(event);
         if (key && !event.repeat) {
             pressed.set(pressId(event), key);
@@ -97,6 +107,7 @@
         }
     }, true);
     document.addEventListener('keyup', event => {
+        if (practice) return;
         const id = pressId(event);
         const key = pressed.get(id);
         pressed.delete(id);
@@ -113,10 +124,6 @@
         done.textContent = state.typed.toUpperCase();
         const remaining = state.complete ? '' : state.remaining;
         guide.replaceChildren(done, document.createTextNode(remaining.toUpperCase()));
-        if (keyboardInput) {
-            keyboardInput.firstElementChild.textContent = state.displayInput;
-            keyboardInput.hidden = guide.hidden;
-        }
         keys.forEach(k => k.classList.remove('is-next'));
         if (!state.complete) {
             for (const key of state.nextKeys) {
@@ -140,12 +147,105 @@
         physicalKey(event)?.classList.add(ok ? 'is-correct' : 'is-wrong');
         timer = setTimeout(clearFeedback, 180);
     }
+    // 離れた問題は確定時の件数、表示中の問題は編集中の件数を使い、重複を防ぐ。
+    function practiceCounts() {
+        const current = finished ? -1 : order[questionIndex];
+        const total = current < 0 ? comparison.empty() : comparison.compare(questions[current].text, answers[current]);
+        reviewedCounts.forEach((counts, index) => {
+            if (counts && index !== current) {
+                for (const key of Object.keys(total)) total[key] += counts[key];
+            }
+        });
+        return total;
+    }
+    function showPracticeCounts() {
+        const counts = practiceCounts();
+        for (const key of ['typo', 'omission', 'extra']) {
+            root.querySelector(`[data-typing-${key}]`).textContent = String(counts[key]);
+        }
+        return counts;
+    }
+    // 出題順とは別に保持した回答を呼び戻し、入力欄と前後の操作ボタンを更新する。
+    function showPracticeQuestion(index) {
+        keyboardInput.value = answers[index];
+        keyboardInput.hidden = false;
+        keyboardInput.readOnly = finished;
+        previousButton.disabled = finished || questionIndex === 0;
+        nextButton.disabled = finished;
+        nextButton.textContent = questionIndex >= questions.length - 1 ? '終了する' : '次の問題へ';
+        showPracticeCounts();
+        if (!finished) {
+            keyboardInput.focus({ preventScroll: true });
+            keyboardInput.setSelectionRange(keyboardInput.value.length, keyboardInput.value.length);
+        }
+    }
+
+    // 実践では標準のIMEと編集操作を使い、確定済みの回答だけを集計・保存する。
+    if (practice) {
+        let composing = false;
+        let pendingMove = 0;
+        let flushTimer;
+        const recordAnswer = () => {
+            if (composing || abandoned || finished || startedAt === null) return;
+            answers[order[questionIndex]] = keyboardInput.value;
+            showPracticeCounts();
+            saveProgress();
+        };
+        const flushMove = () => {
+            clearTimeout(flushTimer);
+            // compositionendの後に届く最終inputも待ってから、問題を切り替える。
+            flushTimer = setTimeout(() => {
+                if (composing || abandoned || finished) return;
+                if (!pendingMove) {
+                    recordAnswer();
+                    return;
+                }
+                const index = order[questionIndex];
+                answers[index] = keyboardInput.value;
+                // 問題を離れる時点で、未入力の末尾も脱字に含めて集計する。
+                checked[index] = true;
+                reviewedCounts[index] = comparison.compare(questions[index].text, answers[index], true);
+                questionIndex += pendingMove;
+                pendingMove = 0;
+                if (questionIndex === questions.length) finishGame();
+                else {
+                    showQuestion();
+                    saveProgress();
+                }
+            }, 0);
+        };
+        const move = direction => {
+            if (startedAt === null || finished || abandoned || pendingMove || questionIndex + direction < 0) return;
+            pendingMove = direction;
+            if (composing) keyboardInput.blur();
+            flushMove();
+        };
+        keyboardInput.addEventListener('compositionstart', () => { composing = true; });
+        keyboardInput.addEventListener('compositionend', () => {
+            composing = false;
+            flushMove();
+        });
+        keyboardInput.addEventListener('input', event => { if (!event.isComposing) recordAnswer(); });
+        for (const name of ['copy', 'paste', 'drop']) {
+            keyboardInput.addEventListener(name, event => event.preventDefault());
+        }
+        keyboardInput.addEventListener('beforeinput', event => {
+            if (['insertFromPaste', 'insertFromDrop', 'insertFromYank'].includes(event.inputType)) event.preventDefault();
+        });
+        previousButton.addEventListener('click', () => move(-1));
+        nextButton.addEventListener('click', () => move(1));
+    }
+
     // 出題順に沿って表示と判定器を切り替える。F5からの復元時は再現済みの状態を使う。
     function showQuestion(restoredState) {
         clearFeedback();
         const index = order[finished ? questionIndex - 1 : questionIndex];
         const question = questions[index];
         text.textContent = question.text;
+        if (practice) {
+            showPracticeQuestion(index);
+            return;
+        }
         kana.textContent = question.kana;
         state = restoredState ?? compiledQuestions[index].create();
         render();
@@ -164,7 +264,8 @@
     }
     function showPlay(restoredState) {
         startPrompt.hidden = true;
-        text.hidden = kana.hidden = guide.hidden = false;
+        text.hidden = false;
+        if (!practice) kana.hidden = guide.hidden = false;
         showQuestion(restoredState);
         if (finished) {
             showElapsed(completedPlay.elapsedMs);
@@ -188,16 +289,24 @@
         if (!document.hidden && startedAt !== null && !finished && !abandoned) updateClock();
     });
     function playSummary(elapsedMs) {
+        if (practice) {
+            const counts = practiceCounts();
+            const miss = counts.typo + counts.omission + counts.extra;
+            return { mode: identity.mode, type: identity.type, setId: identity.setId, correct: counts.correct, miss, elapsedMs, counts };
+        }
         return { mode: identity.mode, type: identity.type, setId: identity.setId,
             correct, miss, elapsedMs, minimumKeystrokes };
     }
-    // 全問完了時点の正打数・ミス数・時間を確定してから、成績を送信する。
+    // ゲームの全問正解または実践の終了操作で、成績と経過時間を確定する。
     function finishGame() {
         finished = true;
         clearInterval(clockInterval);
         const elapsedMs = updateClock();
         clearFeedback();
-        render();
+        if (practice) {
+            keyboardInput.readOnly = previousButton.disabled = nextButton.disabled = true;
+            showPracticeCounts();
+        } else render();
         completedPlay = playSummary(elapsedMs);
         saveResult();
     }
@@ -221,11 +330,11 @@
             const response = await fetch(root.dataset.saveUrl, {
                 method: 'POST',
                 headers,
-                body: JSON.stringify({ attempt, correct, miss, elapsedMs }),
+                body: JSON.stringify(practice ? { attempt, elapsedMs, answers: JSON.stringify(answers) } : { attempt, correct, miss, elapsedMs }),
             });
             if (!response.ok) throw new Error('Result save failed');
             receipt = await response.json();
-            if (!progress.validReceipt(receipt)) {
+            if (!progress.validReceipt(receipt, practice)) {
                 throw new Error('Invalid save response');
             }
         } catch {
@@ -257,7 +366,13 @@
     // 確定した成績と順位を所有ユーザーIDと一緒に保存し、結果画面へ遷移する。
     function openResult() {
         try {
-            window.sessionStorage.setItem('typing.playResult', JSON.stringify({ ...completedPlay, ...savedReceipt, userId: identity.userId }));
+            const receiptCounts = savedReceipt?.counts;
+            const result = { ...completedPlay, ...savedReceipt, userId: identity.userId };
+            if (practice) {
+                result.correct = receiptCounts.correct;
+                result.miss = receiptCounts.typo + receiptCounts.omission + receiptCounts.extra;
+            }
+            window.sessionStorage.setItem('typing.playResult', JSON.stringify(result));
         } catch {
             // 保存できない場合も結果画面の案内と再プレイは利用できる。
         }
@@ -271,10 +386,11 @@
         clearInterval(clockInterval);
         progress.clear();
     });
-    // 開始前のSPACEは開始操作だけに使う。開始後は受け付けた入力を正打かミスとして数える。
+    // 開始前のSPACEは開始専用。開始後はゲームのみ打鍵判定し、実践の入力はIMEに任せる。
     document.addEventListener('keydown', event => {
         if (!ready || abandoned || finished || event.isComposing || event.keyCode===229 || event.repeat || event.ctrlKey || event.altKey || event.metaKey || event.key.length!==1 || event.target?.closest?.('input,textarea,select,[contenteditable=true]')) return;
         const key=event.key.toLowerCase();
+        if (practice && startedAt !== null) return;
         if (!/^[\x20-\x7e]$/.test(key)) return;
         if (event.defaultPrevented || (key === ' ' && event.target?.closest?.('button,[role="button"],summary'))) return;
         if (key === ' ') event.preventDefault();
@@ -297,7 +413,7 @@
         feedback(event, ok);
         saveProgress();
     });
-    root.dataset.minimumKeystrokes = String(minimumKeystrokes);
+    if (!practice) root.dataset.minimumKeystrokes = String(minimumKeystrokes);
     root.dataset.inputComplete = 'false';
     root.dataset.correctCount = '0';
     root.dataset.missCount = '0';
@@ -347,6 +463,12 @@
         }
 
         ({ attempt, order, questionIndex, completedInputs, correct, miss, startedAt, saveState } = previous);
+        if (practice) {
+            ({ answers, checked } = previous.practice);
+            // 復元した回答から確定済みの問題の内訳を再計算する。
+            reviewedCounts = checked.map((reviewed, index) =>
+                reviewed ? comparison.compare(questions[index].text, answers[index], true) : null);
+        }
         if (startedAt !== null) {
             finished = questionIndex === questions.length;
             if (finished) completedPlay = playSummary(previous.elapsedMs);

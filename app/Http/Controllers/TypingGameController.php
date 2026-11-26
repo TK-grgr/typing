@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\Response;
 
+// タイピングの出題画面を返し、再読み込み時のプレイ再開を検証する。
 class TypingGameController extends Controller
 {
     public function show(Request $request, TypingQuestions $questions, TypingAttempt $attempts): View
@@ -20,6 +21,7 @@ class TypingGameController extends Controller
         abort_unless(is_string($questionType) && isset(TypingQuestions::TYPES[$questionType]), 404);
         abort_if($setId === false, 404);
 
+        // URLの指定とDB上のモード・種別を照合し、公開中のセットだけを出題する。
         $set = $questions->published()
             ->where('level', TypingQuestions::LEVELS[$mode])
             ->where('type', TypingQuestions::TYPES[$questionType])
@@ -27,6 +29,7 @@ class TypingGameController extends Controller
         $playItems = $questions->playItems($set);
         abort_if($playItems === null, 404);
         $userId = (int) $request->user()->getAuthIdentifier();
+        // 出題内容から識別値を作り、問題の変更を再開時や実践の保存時に検出する。
         $revision = hash('sha256', json_encode($playItems, JSON_THROW_ON_ERROR));
 
         return view('typing.game', [
