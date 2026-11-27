@@ -1,4 +1,4 @@
-// 正打数・ミス数・経過時間から、正確率・入力速度と4方式のスコアを算出する。
+// 正しい文字数または正打数と、ミス数・経過時間から採点する。
 ((root) => {
     'use strict';
 
@@ -6,9 +6,11 @@
     function calculate(play) {
         if (!play || !['game', 'practice'].includes(play.mode) || !['word', 'long'].includes(play.type)) return null;
         const { correct: C, miss: M, elapsedMs, minimumKeystrokes: N } = play;
-        if (![C, M, N].every(count => Number.isSafeInteger(count) && count >= 0) || !Number.isFinite(elapsedMs)) return null;
+        // ゲームの記録は最短打鍵数も検証する。実践の採点では最短打鍵数を使わない。
+        const counts = play.mode === 'game' ? [C, M, N] : [C, M];
+        if (!counts.every(count => Number.isSafeInteger(count) && count >= 0) || !Number.isFinite(elapsedMs)) return null;
 
-        // C は正打数、M はミス数、N は全問題の最短ローマ字打鍵数（いずれも打鍵）。
+        // C は正しい文字数（ゲームは正打数）、M はミス数。
         // elapsedMs はミリ秒、T は秒。T が 0 以下なら 0.01 秒を使い、ゼロ除算を防ぐ。
         const seconds = elapsedMs / 1000;
         const T = seconds > 0 ? seconds : 0.01;
@@ -18,20 +20,12 @@
         const V = C / T * 60;
 
         let score;
-        if (play.mode === 'game' && play.type === 'word') {
-            // ゲーム×単語。V × 10 × A²。速度点全体に正確率の二乗を掛け、ミスの影響を強く反映する。
+        if (play.mode === 'practice' || play.type === 'word') {
+            // 実践の短文・長文とゲームの単語。V × 10 × A²。
             score = V * 10 * A ** 2;
-        } else if (play.mode === 'game') {
+        } else {
             // ゲーム×長文。V × 5 + V × 5 × A²。速度による基本点に、正確さに応じた加点を足す。
             score = V * 5 + V * 5 * A ** 2;
-        } else if (play.type === 'word') {
-            // 実践×単語。(C − M) ÷ T × 1000。正打からミスを差し引いた打鍵数を速度に換算する。
-            // ミスが正打を上回った場合も差を成績に反映するため、負の点数を許容する。
-            score = (C - M) / T * 1000;
-        } else {
-            // 実践×長文。V × A × (1 + N ÷ 250)。速度と正確さに、問題セットの長さによる補正を掛ける。
-            // N は入力方式に左右されない最短打鍵数。250 打鍵を基準とし、N が 250 のとき補正倍率は 2。
-            score = V * A * (1 + N / 250);
         }
 
         if (!Number.isFinite(V) || !Number.isFinite(score)) return null;

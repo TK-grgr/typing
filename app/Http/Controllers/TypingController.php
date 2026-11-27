@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\TypingQuestions;
 use Illuminate\View\View;
 
+// 公開されている問題セットからタイピング選択画面を組み立てる。
 class TypingController extends Controller
 {
     public function select(TypingQuestions $questions): View
@@ -23,6 +24,7 @@ class TypingController extends Controller
             'word' => ['label' => '単語', 'items' => []],
             'long' => ['label' => '長文', 'items' => []],
         ];
+        // DB上のモード・種別を画面のグループに変換し、セット単位で出題可否を判定する。
         foreach ($sets as $set) {
             $mode = array_search((int) $set->level, TypingQuestions::LEVELS, true);
             $type = array_search((int) $set->type, TypingQuestions::TYPES, true);

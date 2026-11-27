@@ -1,3 +1,4 @@
+// ローマ字の代替入力、途中状態、最短打鍵数、長い入力での挙動を検証する。
 const assert = require('node:assert/strict');
 global.window = {};
 require('../public/js/typing-romaji.js');
@@ -52,7 +53,7 @@ for (const [kana, spelling, previews] of [
 if (failures.length) console.error(failures.join('\n'));
 console.log(`${count - failures.length}/${count} passed; ${failures.length} failed; long text ${elapsed.toFixed(1)}ms`);
 if (failures.length) process.exitCode = 1;
-// Full match tests distinguish accepted prefixes from completed input.
+// 有効な途中入力と、問題を最後まで入力した完全一致を区別して検証する。
 for (const [kana, spellings] of tests) for (const spelling of spellings) {
   assert.equal(romaji.matches(kana, spelling), true, `${kana}: ${spelling}`);
 }

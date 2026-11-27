@@ -20,6 +20,7 @@
         tab.dataset.tabId,
         tab.dataset.tabId === activeTabId ? screen.dataset.initialQuestion : null,
     ]));
+    // 表示中のモードで選択済みのセットが、現在も出題可能かを確認する。
     const selectedQuestion = () => questions.find(question =>
         !question.disabled && question.dataset.questionMode === activeTabId &&
         question.dataset.questionId === selectedQuestionByTab.get(activeTabId));

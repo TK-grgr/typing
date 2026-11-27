@@ -73,6 +73,7 @@
     font-family: Arial, "Noto Sans JP", "Yu Gothic", Meiryo, sans-serif;
 }
 
+/* タイトルと成績一覧を、共通の結果カードに収める。 */
 .typing-result__card {
     display: grid;
     flex: 0 0 auto;
@@ -96,6 +97,7 @@
     overflow-wrap: anywhere;
 }
 
+/* 中央線を挟んで、項目名と値を同じ行に並べる。 */
 .typing-result__metrics {
     position: relative;
     display: grid;
@@ -172,6 +174,30 @@
 .typing-result__action:focus-visible {
     outline: 3px solid #005a73;
     outline-offset: -5px;
+}
+
+/* 実践の9項目を収めるため、カードの高さと各行の余白を調整する。 */
+.typing-result[data-result-mode="practice"] {
+    gap: clamp(12px, 2.8dvh, 28px);
+}
+
+.typing-result[data-result-mode="practice"] .typing-result__card {
+    height: min(69dvh, 610px);
+    padding-block: clamp(10px, 1.8dvh, 24px);
+}
+
+.typing-result[data-result-mode="practice"] .typing-result__title {
+    padding-block: clamp(8px, 2dvh, 24px);
+}
+
+.typing-result[data-result-mode="practice"] .typing-result__metric :is(dt, dd) {
+    padding-block: 2px;
+    font-size: clamp(14px, 1.85dvh, 19px);
+}
+
+.typing-result[data-result-mode="practice"] .typing-result__action {
+    min-height: clamp(44px, 7dvh, 74px);
+    padding-block: 6px;
 }
 
 @media (max-width: 900px) {

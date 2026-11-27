@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 
+// メモリDBでタイピングの画面を描画し、JavaScriptテストに応答を渡す。
 require __DIR__.'/../../vendor/autoload.php';
 $app = require __DIR__.'/../../bootstrap/app.php';
 $kernel = $app->make(Kernel::class);
@@ -35,6 +36,7 @@ if (Schema::hasColumn('questions', 'no')) {
     Schema::table('questions', fn ($table) => $table->dropColumn('no'));
 }
 
+// 4条件に加え、非公開・空セット・読みが使えないセットを用意する。
 $fixtures = [
     [21, 2, 1, 1, '青のセット', [['青', 'あお']]],
     [11, 2, 1, 1, 'れんしゅうのたんご', [['新聞', 'しんぶん'], ['学校', 'がっこう']]],
@@ -50,7 +52,11 @@ $fixtures = [
 ];
 
 if (($argv[2] ?? '') === 'digit-reading') {
-    $fixtures[] = [36, 2, 1, 1, '数字のセット', [['ん7あ', 'ん7あ']]];
+    $fixtures[] = [36, 2, 2, 1, '数字のセット', [['ん7あ', 'ん7あ']]];
+}
+if (($argv[2] ?? '') === 'game-regressions') {
+    $fixtures[] = [37, 2, 2, 1, 'ゲームの回帰セット', [['新聞', 'しんぶん'], ['学校', 'がっこう']]];
+    $fixtures[] = [38, 2, 2, 1, '読みのないゲームセット', [['青', '']]];
 }
 
 foreach ($fixtures as [$id, $type, $level, $release, $title, $lines]) {

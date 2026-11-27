@@ -2,7 +2,12 @@
 
 @section('main')
     <link rel="stylesheet" href="{{ asset('css/typing-game.css') }}">
-    <script src="{{ asset('js/typing-romaji.js') }}" defer></script>
+    {{-- 実践は文章照合、ゲームはローマ字判定のスクリプトを読み込む。 --}}
+    @if ($mode === 'practice')
+        <script src="{{ asset('js/typing-practice.js') }}" defer></script>
+    @else
+        <script src="{{ asset('js/typing-romaji.js') }}" defer></script>
+    @endif
     <script src="{{ asset('js/typing-progress.js') }}" defer></script>
     <script src="{{ asset('js/typing-game.js') }}" defer></script>
     <script>
@@ -36,15 +41,19 @@
             <p class="typing-game__clock">経過時間 <span data-typing-elapsed>00:00</span></p>
         </div>
 
+        {{-- 開始待ちと問題本文の表示領域。読み仮名とガイドはゲームだけに表示する。 --}}
         <section class="typing-game__question" aria-label="タイピングの問題">
             <p class="typing-game__text" data-typing-start>SPACEでスタート</p>
             <h1 class="typing-game__text" id="typing-game-question" data-typing-text hidden></h1>
-            <p class="typing-game__kana" data-typing-kana hidden></p>
-            <p class="typing-game__romaji" lang="en" data-typing-romaji hidden></p>
+            @if ($mode === 'game')
+                <p class="typing-game__kana" data-typing-kana hidden></p>
+                <p class="typing-game__romaji" lang="en" data-typing-romaji hidden></p>
+            @endif
             <p role="status" data-typing-save-status hidden></p>
         </section>
 
-        <figure class="typing-game__keyboard" role="img" aria-label="日本語配列を参考にした仮想キーボード。キーは空欄の表示専用です。">
+        {{-- ゲームではキーを案内し、実践ではキーボードを文章入力欄の背景に使う。 --}}
+        <figure class="typing-game__keyboard" @if ($mode === 'game') role="img" aria-label="日本語配列を参考にした仮想キーボード。キーは空欄の表示専用です。" @endif>
             <div class="typing-game__key-layout" aria-hidden="true">
                 @foreach ($keyRows as $row)
                     @foreach ($row['keys'] as $index => $key)
@@ -72,11 +81,25 @@
                 </span>
             </div>
             @if ($mode === 'practice')
-                <p class="typing-game__keyboard-input" data-typing-keyboard-input aria-hidden="true" hidden><span></span></p>
+                <textarea class="typing-game__keyboard-input" data-typing-keyboard-input lang="ja"
+                    aria-label="解答を入力" aria-describedby="typing-game-question" maxlength="{{ \App\Support\TypingPractice::MAX_ANSWER_LENGTH }}"
+                    autocomplete="off" autocapitalize="off" spellcheck="false" hidden></textarea>
             @endif
         </figure>
+        {{-- 途中終了と保存の再試行を共通にし、実践には件数と問題移動を追加する。 --}}
         <nav class="typing-game__actions" aria-label="ゲーム操作">
             <a href="{{ $selectUrl }}" data-typing-exit>途中終了</a>
+            @if ($mode === 'practice')
+                <div class="typing-game__errors">
+                    <span>誤字 <output data-typing-typo>0</output></span>
+                    <span>脱字 <output data-typing-omission>0</output></span>
+                    <span>余字 <output data-typing-extra>0</output></span>
+                </div>
+                <div class="typing-game__navigation">
+                    <button type="button" data-typing-previous disabled>前の問題へ</button>
+                    <button type="button" data-typing-next disabled>次の問題へ</button>
+                </div>
+            @endif
             <button type="button" data-typing-save-retry hidden>成績を再送する</button>
         </nav>
     </main>

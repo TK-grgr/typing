@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Schema;
 use PDOException;
 use Tests\TestCase;
 
+// 専用のメモリDBで、採点・成績保存・順位・二重保存防止を検証する。
 class TypingResultStoreTest extends TestCase
 {
     protected function setUp(): void
@@ -54,11 +55,14 @@ class TypingResultStoreTest extends TestCase
         $user = $this->player('owner@example.test');
         $this->actingAs($user);
         foreach ([['game', 'word', 2, 2, 1013], ['game', 'long', 2, 1, 1406],
-            ['practice', 'word', 1, 2, 2000], ['practice', 'long', 1, 1, 203]] as [$mode, $type, $level, $kind, $score]) {
+            ['practice', 'word', 1, 2, 1013], ['practice', 'long', 1, 1, 1013]] as [$mode, $type, $level, $kind, $score]) {
             $set = $this->question($level, $kind, str_repeat('あ', 125));
-            $attempt = app(TypingAttempt::class)->issue($user->id, $set->id, $mode, $type);
-            $this->postJson('/typing/result', ['attempt' => $attempt, 'correct' => 90, 'miss' => 30, 'elapsedMs' => 29999.5,
-                'score' => 123456, 'user_id' => 999, 'minimumKeystrokes' => 1])
+            $set->details()->update(['text' => str_repeat('あ', 120)]);
+            $attempt = $this->attempt($user, $set, $mode, $type);
+            $payload = $mode === 'game' ? ['correct' => 90, 'miss' => 30]
+                : ['answers' => json_encode([str_repeat('あ', 90).str_repeat('い', 30)]), 'correct' => 999, 'miss' => 0];
+            $this->postJson('/typing/result', $payload + ['attempt' => $attempt, 'elapsedMs' => 29999.5,
+                'score' => 123456, 'user_id' => 999])
                 ->assertOk()->assertJsonPath('score', $score)->assertJsonPath('rank', 1);
             $this->assertDatabaseHas('results', ['user_id' => $user->id, 'question_id' => $set->id,
                 'score' => $score, 'correct' => 90, 'miss' => 30, 'input_time' => 29]);
@@ -72,16 +76,16 @@ class TypingResultStoreTest extends TestCase
         $user = $this->player('owner@example.test');
         $other = $this->player('other@example.test');
         $this->actingAs($user);
-        $set = $this->question(1, 2);
-        $otherSet = $this->question(1, 2);
+        $set = $this->question(2, 2);
+        $otherSet = $this->question(2, 2);
         DB::table('results')->insert(['user_id' => $other->id, 'question_id' => $otherSet->id, 'score' => 10000,
             'correct' => 10, 'miss' => 0, 'input_time' => 1]);
         $plays = [];
         foreach ([[4, 1], [3, 2], [3, 2], [1, 4], [5, 1]] as [$correct, $rank]) {
-            $attempt = app(TypingAttempt::class)->issue($user->id, $set->id, 'practice', 'word');
+            $attempt = app(TypingAttempt::class)->issue($user->id, $set->id, 'game', 'word');
             $payload = ['attempt' => $attempt, 'correct' => $correct, 'miss' => 0, 'elapsedMs' => 1000];
             $response = $this->postJson('/typing/result', $payload)->assertOk()
-                ->assertJsonPath('score', $correct * 1000)->assertJsonPath('rank', $rank);
+                ->assertJsonPath('score', $correct * 600)->assertJsonPath('rank', $rank);
             $plays[] = [$payload, $response->json()];
         }
         [$payload, $original] = $plays[1];
@@ -89,10 +93,53 @@ class TypingResultStoreTest extends TestCase
         $this->assertDatabaseCount('results', 6);
     }
 
+    // 末尾の空白と未入力の問題を含む回答から、サーバーが内訳を正しく集計するか検証する。
+    public function test_practice_saves_server_counts_and_keeps_the_receipt_on_retry(): void
+    {
+        $user = $this->player('practice@example.test');
+        $set = $this->question(1, 1, '');
+        $set->details()->update(['text' => '図書館に行く']);
+        foreach (['Ａ、', '終'] as $text) {
+            $detail = $set->details()->make(['text' => $text]);
+            $detail->reading = '';
+            $detail->save();
+        }
+        $otherSet = $this->question(1, 1);
+        foreach ([[$set->id, 1100], [$otherSet->id, 10000]] as [$setId, $score]) {
+            DB::table('results')->insert(['user_id' => $user->id, 'question_id' => $setId, 'score' => $score,
+                'correct' => 1, 'miss' => 0, 'input_time' => 1]);
+        }
+        $attempt = $this->attempt($user, $set, 'practice', 'long');
+        $payload = ['attempt' => $attempt, 'elapsedMs' => 2000, 'answers' => json_encode(['図書館に効く', 'Ａ、 ', '']),
+            'correct' => 999, 'miss' => 0, 'score' => 999999];
+        $response = $this->postJson('/typing/result', $payload)->assertOk()
+            ->assertJsonPath('score', 1029)->assertJsonPath('rank', 2)
+            ->assertJsonPath('counts', ['correct' => 7, 'typo' => 1, 'omission' => 1, 'extra' => 1]);
+        $this->assertDatabaseHas('results', ['id' => $response->json('resultId'), 'correct' => 7, 'miss' => 3, 'input_time' => 2]);
+        $this->postJson('/typing/result', [...$payload, 'answers' => '[]'])->assertOk()->assertExactJson($response->json());
+        $this->assertDatabaseCount('results', 3);
+    }
+
+    public function test_practice_rejects_invalid_answers_and_changed_targets(): void
+    {
+        $user = $this->player('practice@example.test');
+        $set = $this->question(1, 2);
+        $attempt = $this->attempt($user, $set, 'practice', 'word');
+        $payload = ['attempt' => $attempt, 'elapsedMs' => 2000];
+        foreach ([null, '[]', '{', '{"0":"答え"}', '[2]', json_encode([str_repeat('あ', 4097)])] as $answers) {
+            $this->postJson('/typing/result', $payload + ['answers' => $answers])->assertUnprocessable();
+        }
+        $set->details()->update(['text' => '変更']);
+        $this->postJson('/typing/result', $payload + ['answers' => '[""]'])->assertUnprocessable();
+        $this->assertDatabaseCount('results', 0);
+        $this->assertDatabaseCount('cache', 0);
+    }
+
+    // 順位だけが取得できない場合でも、保存済み成績の再登録が起きないことを確認する。
     public function test_a_rank_query_failure_keeps_the_saved_score_and_does_not_retry_it(): void
     {
         $user = $this->player('owner@example.test');
-        $set = $this->question(1, 2);
+        $set = $this->question(2, 2);
         $rankQueries = 0;
         DB::connection()->beforeExecuting(function ($sql, $bindings, $connection) use (&$rankQueries) {
             if (str_contains($sql, 'count(*)') && str_contains($sql, '"score" >')) {
@@ -100,12 +147,12 @@ class TypingResultStoreTest extends TestCase
                 throw new QueryException($connection->getName(), $sql, $bindings, new PDOException('Rank query unavailable'));
             }
         });
-        $attempt = app(TypingAttempt::class)->issue($user->id, $set->id, 'practice', 'word');
+        $attempt = app(TypingAttempt::class)->issue($user->id, $set->id, 'game', 'word');
         $payload = ['attempt' => $attempt, 'correct' => 1, 'miss' => 2, 'elapsedMs' => 16000];
         $response = $this->actingAs($user)->postJson('/typing/result', $payload)->assertOk()
-            ->assertJsonPath('score', -63)->assertJsonPath('rank', null);
+            ->assertJsonPath('score', 4)->assertJsonPath('rank', null);
         $this->postJson('/typing/result', $payload)->assertOk()->assertExactJson($response->json());
-        $this->get('/typing/result?mode=practice&type=word&set='.$set->id)->assertOk();
+        $this->get('/typing/result?mode=game&type=word&set='.$set->id)->assertOk();
         $this->assertSame(1, $rankQueries);
         $this->assertDatabaseCount('results', 1);
     }
@@ -114,8 +161,8 @@ class TypingResultStoreTest extends TestCase
     {
         $player = $this->player('owner@example.test');
         $other = $this->player('other@example.test');
-        $set = $this->question(1, 2);
-        $attempt = app(TypingAttempt::class)->issue($player->id, $set->id, 'practice', 'word');
+        $set = $this->question(2, 2);
+        $attempt = app(TypingAttempt::class)->issue($player->id, $set->id, 'game', 'word');
         $payload = ['attempt' => $attempt, 'correct' => 2, 'miss' => 1, 'elapsedMs' => 1300];
         $this->postJson('/typing/result', $payload)->assertUnauthorized();
         $this->actingAs($other)->postJson('/typing/result', $payload)->assertUnprocessable();
@@ -123,8 +170,8 @@ class TypingResultStoreTest extends TestCase
         foreach ([['correct' => -1], ['miss' => '0'], ['elapsedMs' => '1'], ['attempt' => 'invalid']] as $invalid) {
             $this->postJson('/typing/result', [...$payload, ...$invalid])->assertUnprocessable();
         }
-        $this->postJson('/typing/result', [...$payload, 'attempt' => app(TypingAttempt::class)->issue($player->id, 999, 'practice', 'word')])->assertNotFound();
-        $this->postJson('/typing/result', [...$payload, 'attempt' => app(TypingAttempt::class)->issue($player->id, $set->id, 'game', 'word')])->assertNotFound();
+        $this->postJson('/typing/result', [...$payload, 'attempt' => app(TypingAttempt::class)->issue($player->id, 999, 'game', 'word')])->assertNotFound();
+        $this->postJson('/typing/result', [...$payload, 'attempt' => app(TypingAttempt::class)->issue($player->id, $set->id, 'game', 'long')])->assertNotFound();
         $set->update(['release' => 0]);
         $this->postJson('/typing/result', $payload)->assertNotFound();
         $this->assertDatabaseCount('results', 0);
@@ -194,6 +241,15 @@ class TypingResultStoreTest extends TestCase
         $this->travel(9)->hours();
         $this->postJson($resume, ['attempt' => $changed, 'currentAttempt' => $readAttempt()])->assertUnprocessable();
         $this->assertDatabaseCount('results', 0);
+    }
+
+    private function attempt(User $user, Question $set, string $mode, string $type): string
+    {
+        $html = $this->actingAs($user)->get('/typing/game?'.http_build_query(['mode' => $mode, 'type' => $type, 'set' => $set->id]))
+            ->assertOk()->getContent();
+        $this->assertSame(1, preg_match('/data-attempt="([^"]+)"/', $html, $match));
+
+        return html_entity_decode($match[1]);
     }
 
     private function player(string $email): User

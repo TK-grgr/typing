@@ -6,6 +6,7 @@ use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Str;
 
+// ユーザーと出題条件を紐づけた、有効期限付きのプレイトークンを扱う。
 class TypingAttempt
 {
     public function issue(int $userId, int $setId, string $mode, string $type, ?string $revision = null): string
@@ -16,6 +17,7 @@ class TypingAttempt
         ]);
     }
 
+    // 復号後に利用者と有効期限を確認してから、再開や保存に使う。
     public function read(string $token, int $userId): array
     {
         try {
