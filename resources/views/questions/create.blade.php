@@ -47,8 +47,9 @@
 こんばんは"></textarea>
 </div>
             <div class="btn-area">
-                <a href="{{ route('questions.index') }}"
-                    class="back-btn">一覧へ戻る</a>
+                @if (Auth::check() && Auth::user()->role == 1)
+                    <a href="{{ route('questions.index') }}" class="back-btn">一覧へ戻る</a>
+                @endif
                 <button type="submit" class="save-btn">作成</button>
             </div>
         </form>
