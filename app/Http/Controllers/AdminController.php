@@ -15,7 +15,7 @@ class AdminController extends Controller
     public function index()
     {
         if(Auth::user()->role != 1){
-        abort(403);
+        return redirect('top');
         }
         $users = User::with([
         'school',
@@ -50,7 +50,7 @@ class AdminController extends Controller
     public function show(string $id)
     {
         if(Auth::user()->role != 1){
-        abort(403);
+        return redirect('top');
         }
         $user = User::findOrFail($id);
 

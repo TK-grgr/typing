@@ -16,7 +16,7 @@ class QuestionController extends Controller
     public function index()
     {
         if(Auth::user()->role != 1){
-        abort(403);
+        return redirect('top');
         }
     $questions = Question::all();
 
@@ -99,9 +99,9 @@ class QuestionController extends Controller
      */
     public function edit(string $id)
 {
-    if (!Auth::check() || Auth::user()->role != 1) {
-        abort(403);
-    }
+    if(Auth::user()->role != 1){
+        return redirect('top');
+        }
 
     $question = Question::with('details')->findOrFail($id);
 
